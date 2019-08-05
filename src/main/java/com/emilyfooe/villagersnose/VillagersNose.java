@@ -9,7 +9,7 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-@Mod("VillagersNose.MODID")
+@Mod(VillagersNose.MODID)
 public class VillagersNose
 {
     // Directly reference a log4j logger.
