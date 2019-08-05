@@ -1,0 +1,16 @@
+[
+{
+  "modid": "VillagersNose",
+  "name": "Villager's Nose",
+  "description": "NOT SERIOUS!",
+  "version": "1.3c",
+  "mcversion": "1.7.10",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["StarSheep"],
+  "credits": "",
+  "logoFile": "assets/villagersnose/logo.png",
+  "screenshots": [],
+  "dependencies": []
+}
+]
