@@ -1,6 +1,5 @@
-package com.emilyfooe.villagersnose;
+package com.emilyfooe.villagersnose.renderer;
 
-import net.minecraft.client.renderer.entity.VillagerRenderer;
 import net.minecraft.client.renderer.entity.model.EntityModel;
 import net.minecraft.client.renderer.entity.model.IHasHead;
 import net.minecraft.client.renderer.entity.model.IHeadToggle;
@@ -12,7 +11,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
-public class VillagerNoNoseModel<T extends Entity> extends EntityModel<T> implements IHasHead, IHeadToggle {
+public class MyVillagerModel<T extends Entity> extends EntityModel<T> implements IHasHead, IHeadToggle {
     protected final RendererModel villagerHead;
     protected RendererModel field_217151_b;
     protected final RendererModel field_217152_f;
@@ -21,12 +20,13 @@ public class VillagerNoNoseModel<T extends Entity> extends EntityModel<T> implem
     protected final RendererModel villagerArms;
     protected final RendererModel rightVillagerLeg;
     protected final RendererModel leftVillagerLeg;
+    protected final RendererModel villagerNose;
 
-    public VillagerNoNoseModel(float scale) {
+    public MyVillagerModel(float scale) {
         this(scale, 64, 64);
     }
 
-    public VillagerNoNoseModel(float p_i51059_1_, int p_i51059_2_, int p_i51059_3_) {
+    public MyVillagerModel(float p_i51059_1_, int p_i51059_2_, int p_i51059_3_) {
         float f = 0.5F;
         this.villagerHead = (new RendererModel(this)).setTextureSize(p_i51059_2_, p_i51059_3_);
         this.villagerHead.setRotationPoint(0.0F, 0.0F, 0.0F);
@@ -38,12 +38,12 @@ public class VillagerNoNoseModel<T extends Entity> extends EntityModel<T> implem
         this.field_217152_f = (new RendererModel(this)).setTextureSize(p_i51059_2_, p_i51059_3_);
         this.field_217152_f.setRotationPoint(0.0F, 0.0F, 0.0F);
         this.field_217152_f.setTextureOffset(30, 47).addBox(-8.0F, -8.0F, -6.0F, 16, 16, 1, p_i51059_1_);
-        this.field_217152_f.rotateAngleX = (-(float)Math.PI / 2F);
+        this.field_217152_f.rotateAngleX = (-(float) Math.PI / 2F);
         this.field_217151_b.addChild(this.field_217152_f);
-        /*this.villagerNose = (new RendererModel(this)).setTextureSize(p_i51059_2_, p_i51059_3_);
+        this.villagerNose = (new RendererModel(this)).setTextureSize(p_i51059_2_, p_i51059_3_);
         this.villagerNose.setRotationPoint(0.0F, -2.0F, 0.0F);
         this.villagerNose.setTextureOffset(24, 0).addBox(-1.0F, -1.0F, -6.0F, 2, 4, 2, p_i51059_1_);
-        this.villagerHead.addChild(this.villagerNose);*/
+        this.villagerHead.addChild(this.villagerNose);
         this.villagerBody = (new RendererModel(this)).setTextureSize(p_i51059_2_, p_i51059_3_);
         this.villagerBody.setRotationPoint(0.0F, 0.0F, 0.0F);
         this.villagerBody.setTextureOffset(16, 20).addBox(-4.0F, 0.0F, -3.0F, 8, 12, 6, p_i51059_1_);
@@ -77,11 +77,11 @@ public class VillagerNoNoseModel<T extends Entity> extends EntityModel<T> implem
     public void setRotationAngles(T entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scaleFactor) {
         boolean flag = false;
         if (entityIn instanceof AbstractVillagerEntity) {
-            flag = ((AbstractVillagerEntity)entityIn).getShakeHeadTicks() > 0;
+            flag = ((AbstractVillagerEntity) entityIn).getShakeHeadTicks() > 0;
         }
 
-        this.villagerHead.rotateAngleY = netHeadYaw * ((float)Math.PI / 180F);
-        this.villagerHead.rotateAngleX = headPitch * ((float)Math.PI / 180F);
+        this.villagerHead.rotateAngleY = netHeadYaw * ((float) Math.PI / 180F);
+        this.villagerHead.rotateAngleX = headPitch * ((float) Math.PI / 180F);
         if (flag) {
             this.villagerHead.rotateAngleZ = 0.3F * MathHelper.sin(0.45F * ageInTicks);
             this.villagerHead.rotateAngleX = 0.4F;
@@ -93,7 +93,7 @@ public class VillagerNoNoseModel<T extends Entity> extends EntityModel<T> implem
         this.villagerArms.rotationPointZ = -1.0F;
         this.villagerArms.rotateAngleX = -0.75F;
         this.rightVillagerLeg.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount * 0.5F;
-        this.leftVillagerLeg.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F + (float)Math.PI) * 1.4F * limbSwingAmount * 0.5F;
+        this.leftVillagerLeg.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F + (float) Math.PI) * 1.4F * limbSwingAmount * 0.5F;
         this.rightVillagerLeg.rotateAngleY = 0.0F;
         this.leftVillagerLeg.rotateAngleY = 0.0F;
     }

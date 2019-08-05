@@ -13,7 +13,7 @@ import org.apache.logging.log4j.Logger;
 public class VillagersNose
 {
     // Directly reference a log4j logger.
-    static final String MODID = "villagersnose";
+    public static final String MODID = "villagersnose";
     static final Logger LOGGER = LogManager.getLogger();
     public static ArmorMaterial materialNose;
 
