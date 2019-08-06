@@ -1,22 +1,11 @@
 package com.emilyfooe.villagersnose;
 
-import com.emilyfooe.villagersnose.renderer.MyVillagerModel;
-import net.minecraft.client.renderer.entity.EntityRendererManager;
-import net.minecraft.client.renderer.entity.VillagerRenderer;
-import net.minecraft.client.renderer.entity.model.ChickenModel;
-import net.minecraft.client.renderer.entity.model.VillagerModel;
-import net.minecraft.client.renderer.model.Model;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ShearsItem;
-import net.minecraftforge.client.event.ModelRegistryEvent;
-import net.minecraftforge.client.event.RenderLivingEvent;
-import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
-import net.minecraftforge.event.entity.EntityEvent;
-import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -46,8 +35,8 @@ public class EventHandlers {
             }
         }
     }
-    @SubscribeEvent
-    public static void onRenderLiving(RenderLivingEvent.Pre event){
+    /*@SubscribeEvent
+    public static void onRenderLiving(RenderLivingEvent.Pre<LivingEntity, net.minecraft.client.renderer.entity.model.EntityModel<LivingEntity>> event){
         if (event.getEntity() instanceof VillagerEntity){
             VillagerEntity villager = (VillagerEntity) event.getEntity();
             if (villager.getEntityData().contains("hasNose")){
@@ -56,9 +45,9 @@ public class EventHandlers {
                     //event.getRenderer().getRenderManager()
                 } else {
                     VillagersNose.LOGGER.info("Rendering w/ nose...");
-                    event.getRenderer().getEntityModel().setModelAttributes(new ChickenModel());
+                    event.getRenderer().getEntityModel().setModelAttributes(new ChickenModel<Entity>());
                 }
             }
         }
-    }
+    }*/
 }
