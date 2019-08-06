@@ -21,14 +21,16 @@ public class EventHandlers {
 
     @SubscribeEvent
     public static void shearNoseEvent(PlayerInteractEvent.EntityInteract event){
+        VillagersNose.LOGGER.info("PlayerInteractEvent.EntityInteract event fired.");
         if (event.getEntityPlayer().getHeldItemMainhand().getItem() instanceof ShearsItem){
-            if (event.getTarget() instanceof VillagerEntity && event.getTarget().getEntityData().contains(NOSE_KEY)){
-                boolean hasNose = event.getTarget().getEntityData().getBoolean(NOSE_KEY);
+            if (event.getTarget() instanceof VillagerEntity && event.getTarget().getCapability(MY_CAPABILITY).isPresent()){
+                INose cap = event.getTarget().getCapability(MY_CAPABILITY).orElseThrow(() -> new RuntimeException("No inventory!"));
+                boolean hasNose = cap.getHasNose();
                 VillagersNose.LOGGER.info("hasNose: " + hasNose);
                 if (hasNose){
-                    event.getTarget().getEntityData().putBoolean(NOSE_KEY, false);
+                    cap.setHasNose(false);
                     ItemStack shears = event.getEntityPlayer().getHeldItemMainhand();
-                    shears.damageItem(1, event.getEntityPlayer(), (Consumer<LivingEntity>) event.getTarget());
+                    shears.damageItem(1, event.getEntityPlayer(), (exp) -> exp.sendBreakAnimation(event.getHand()));
                 }
             }
         }
