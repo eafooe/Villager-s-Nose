@@ -53,10 +53,11 @@ public class VillagersNose
     private void clientSetup(final FMLClientSetupEvent event) {
        Minecraft mc = Minecraft.getInstance();
        IReloadableResourceManager resourceManager = (IReloadableResourceManager) mc.getResourceManager();
-       TextureManager textureManager = mc.getTextureManager();
-       ItemRenderer item = mc.getItemRenderer();
-       EntityRendererManager r = new EntityRendererManager(textureManager, item, resourceManager);
-       r.register(VillagerEntity.class, new VillagerRendererOverride(r, resourceManager));
+       //TextureManager textureManager = mc.getTextureManager();
+       //ItemRenderer item = mc.getItemRenderer();
+       EntityRendererManager re = mc.getRenderManager();
+       //EntityRendererManager r = new EntityRendererManager(textureManager, item, resourceManager);
+       re.register(VillagerEntity.class, new VillagerRendererOverride(re, resourceManager));
        LOGGER.info("Client method registered");
     }
 }
