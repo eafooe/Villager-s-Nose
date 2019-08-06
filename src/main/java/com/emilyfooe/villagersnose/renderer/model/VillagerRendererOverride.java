@@ -10,7 +10,8 @@ import net.minecraft.resources.IReloadableResourceManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.client.registry.IRenderFactory;
+
+import javax.annotation.Nonnull;
 
 @OnlyIn(Dist.CLIENT)
 public class VillagerRendererOverride extends MobRenderer<VillagerEntity, VillagerModelOverride<VillagerEntity>> {
@@ -24,7 +25,7 @@ public class VillagerRendererOverride extends MobRenderer<VillagerEntity, Villag
     }
 
 
-    protected ResourceLocation getEntityTexture(VillagerEntity entity) {
+    protected ResourceLocation getEntityTexture(@Nonnull VillagerEntity entity) {
         return field_217779_a;
     }
 

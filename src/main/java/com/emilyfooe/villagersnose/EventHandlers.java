@@ -2,8 +2,8 @@ package com.emilyfooe.villagersnose;
 
 import com.emilyfooe.villagersnose.capabilities.INose;
 import com.emilyfooe.villagersnose.capabilities.NoseProvider;
+import com.emilyfooe.villagersnose.item.ItemNose;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ShearsItem;
@@ -11,14 +11,10 @@ import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-import java.util.function.Consumer;
-
 import static com.emilyfooe.villagersnose.capabilities.NoseProvider.MY_CAPABILITY;
 import static com.emilyfooe.villagersnose.capabilities.NoseProvider.MY_CAPABILITY_KEY;
 
 public class EventHandlers {
-    private static final String NOSE_KEY = "hasNose";
-
     @SubscribeEvent
     public static void shearNoseEvent(PlayerInteractEvent.EntityInteract event){
         VillagersNose.LOGGER.info("PlayerInteractEvent.EntityInteract event fired.");
@@ -31,6 +27,7 @@ public class EventHandlers {
                     cap.setHasNose(false);
                     ItemStack shears = event.getEntityPlayer().getHeldItemMainhand();
                     shears.damageItem(1, event.getEntityPlayer(), (exp) -> exp.sendBreakAnimation(event.getHand()));
+                    event.getEntity().entityDropItem(ItemNose::new);
                 }
             }
         }
