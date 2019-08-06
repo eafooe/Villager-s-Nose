@@ -1,6 +1,9 @@
 package com.emilyfooe.villagersnose.renderer.model;
 
 import com.emilyfooe.villagersnose.VillagersNose;
+import com.emilyfooe.villagersnose.capabilities.INose;
+import com.emilyfooe.villagersnose.capabilities.Nose;
+import com.emilyfooe.villagersnose.capabilities.NoseProvider;
 import net.minecraft.client.renderer.entity.model.EntityModel;
 import net.minecraft.client.renderer.entity.model.IHasHead;
 import net.minecraft.client.renderer.entity.model.IHeadToggle;
@@ -10,6 +13,9 @@ import net.minecraft.entity.merchant.villager.AbstractVillagerEntity;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.util.LazyOptional;
+
+import static com.emilyfooe.villagersnose.capabilities.NoseProvider.MY_CAPABILITY;
 
 @OnlyIn(Dist.CLIENT)
 public class VillagerModelOverride<T extends Entity> extends EntityModel<T> implements IHasHead, IHeadToggle {
@@ -72,18 +78,25 @@ public class VillagerModelOverride<T extends Entity> extends EntityModel<T> impl
     public void render(T entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
         this.setRotationAngles(entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
 
-        if (!villagerHead.childModels.contains(villagerNose)){
-            if (entityIn.getEntityData().getBoolean("hasNose")){
-                VillagersNose.LOGGER.info("Adding villager nose child...");
-                villagerHead.addChild(villagerNose);
+
+
+        if (entityIn.getCapability(MY_CAPABILITY).isPresent()){
+                Nose nose = (Nose) entityIn.getCapability(MY_CAPABILITY).orElseThrow(() -> new RuntimeException("No inventory!"));;
+                // Add a nose to a villager w/o a nose
+                if (nose.getHasNose() && !villagerHead.childModels.contains(villagerNose)){
+                    VillagersNose.LOGGER.info("Adding nose to a nose-blind villager...");
+                    villagerHead.addChild(villagerNose);
+                    // Remove a nose from a villager w/ a nose
+                } else if (!nose.getHasNose() && villagerHead.childModels.contains(villagerNose)){
+                    VillagersNose.LOGGER.info("Removing nose from a naughty villager...");
+                    villagerHead.removeChild(villagerNose);
+                }
+            } else {
+                VillagersNose.LOGGER.info("Could not find nose capability");
             }
-        } else {
-            if (!entityIn.getEntityData().getBoolean("hasNose")){
-                VillagersNose.LOGGER.info("Removing villager nose child...");
-                villagerHead.removeChild(villagerNose);
-            }
-        }
-        VillagersNose.LOGGER.info("Rendering villager head...");
+
+
+        //VillagersNose.LOGGER.info("Rendering villager head...");
         villagerHead.render(scale);
         villagerBody.render(scale);
         rightVillagerLeg.render(scale);
