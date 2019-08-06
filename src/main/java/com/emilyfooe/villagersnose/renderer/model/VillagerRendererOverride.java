@@ -10,21 +10,19 @@ import net.minecraft.resources.IReloadableResourceManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fml.client.registry.IRenderFactory;
 
 @OnlyIn(Dist.CLIENT)
 public class VillagerRendererOverride extends MobRenderer<VillagerEntity, VillagerModelOverride<VillagerEntity>> {
     private static final ResourceLocation field_217779_a = new ResourceLocation("textures/entity/villager/villager.png");
 
-    public VillagerRendererOverride(EntityRendererManager manager){
-        super(manager, new VillagerModelOverride<>(0.0F), 0.5F);
+    public VillagerRendererOverride(EntityRendererManager rendererManager, IReloadableResourceManager resourceManager){
+        super(rendererManager, new VillagerModelOverride<>(0.0F), 0.5F);
         addLayer(new HeadLayer<>(this));
+        addLayer(new VillagerLevelPendantLayer<>(this, resourceManager, "villager"));
+        addLayer(new VillagerHeldItemLayerOverride<>(this));
     }
-    public VillagerRendererOverride(EntityRendererManager manager, IReloadableResourceManager p_i50954_2_) {
-        super(manager, new VillagerModelOverride<>(0.0F), 0.5F);
-        this.addLayer(new HeadLayer<>(this));
-        this.addLayer(new VillagerLevelPendantLayer<>(this, p_i50954_2_, "villager"));
-        //addLayer(new VillagerHeldItemLayer<VillagerEntity>(this));
-    }
+
 
     protected ResourceLocation getEntityTexture(VillagerEntity entity) {
         return field_217779_a;
@@ -41,4 +39,5 @@ public class VillagerRendererOverride extends MobRenderer<VillagerEntity, Villag
 
         GlStateManager.scalef(f, f, f);
     }
+
 }
