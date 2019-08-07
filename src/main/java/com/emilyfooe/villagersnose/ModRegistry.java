@@ -11,10 +11,12 @@ import static com.emilyfooe.villagersnose.VillagersNose.MODID;
 @ObjectHolder(MODID)
 @Mod.EventBusSubscriber(modid = MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ModRegistry {
+
     @SubscribeEvent
     public static void onItemRegistry(RegistryEvent.Register<Item> event){
         for(Item item : ModItems.items){
             event.getRegistry().register(item);
         }
     }
+
 }

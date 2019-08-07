@@ -1,4 +1,4 @@
-package com.emilyfooe.villagersnose.capabilities;
+package com.emilyfooe.villagersnose.capabilities.Nose;
 
 import com.emilyfooe.villagersnose.VillagersNose;
 import net.minecraft.nbt.INBT;
@@ -14,27 +14,27 @@ import javax.annotation.Nullable;
 import java.util.Objects;
 
 public class NoseProvider implements ICapabilitySerializable<INBT> {
-    public static final ResourceLocation MY_CAPABILITY_KEY = new ResourceLocation(VillagersNose.MODID, "my_capability");
+    public static final ResourceLocation NOSE_CAP_KEY = new ResourceLocation(VillagersNose.MODID, "my_capability");
 
     @CapabilityInject(INose.class)
-    public static Capability<INose> MY_CAPABILITY = null;
+    public static Capability<INose> NOSE_CAP = null;
 
-    private final LazyOptional<INose> instance = LazyOptional.of(() -> Objects.requireNonNull(MY_CAPABILITY.getDefaultInstance()));
+    private final LazyOptional<INose> instance = LazyOptional.of(() -> Objects.requireNonNull(NOSE_CAP.getDefaultInstance()));
 
     @Override
     public INBT serializeNBT() {
-        return MY_CAPABILITY.getStorage().writeNBT(MY_CAPABILITY, MY_CAPABILITY.getDefaultInstance(), null);
+        return NOSE_CAP.getStorage().writeNBT(NOSE_CAP, NOSE_CAP.getDefaultInstance(), null);
     }
 
     @Override
     public void deserializeNBT(INBT nbt) {
-        MY_CAPABILITY.getStorage().readNBT(MY_CAPABILITY, MY_CAPABILITY.getDefaultInstance(), null, nbt);
+        NOSE_CAP.getStorage().readNBT(NOSE_CAP, NOSE_CAP.getDefaultInstance(), null, nbt);
     }
 
     @Nonnull
     @Override
     public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
-        if (cap ==  MY_CAPABILITY){
+        if (cap == NOSE_CAP){
             return instance.cast();
         } else {
             return LazyOptional.empty();

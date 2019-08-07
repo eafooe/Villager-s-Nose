@@ -1,4 +1,4 @@
-package com.emilyfooe.villagersnose.capabilities;
+package com.emilyfooe.villagersnose.capabilities.Nose;
 
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;

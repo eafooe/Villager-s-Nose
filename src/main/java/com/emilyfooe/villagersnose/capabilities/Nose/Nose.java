@@ -1,4 +1,4 @@
-package com.emilyfooe.villagersnose.capabilities;
+package com.emilyfooe.villagersnose.capabilities.Nose;
 
 public class Nose implements INose {
     private boolean hasNose = true;

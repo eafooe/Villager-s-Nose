@@ -1,7 +1,7 @@
 package com.emilyfooe.villagersnose.renderer.model;
 
 import com.emilyfooe.villagersnose.VillagersNose;
-import com.emilyfooe.villagersnose.capabilities.Nose;
+import com.emilyfooe.villagersnose.capabilities.Nose.Nose;
 import net.minecraft.client.renderer.entity.model.EntityModel;
 import net.minecraft.client.renderer.entity.model.IHasHead;
 import net.minecraft.client.renderer.entity.model.IHeadToggle;
@@ -12,7 +12,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-import static com.emilyfooe.villagersnose.capabilities.NoseProvider.MY_CAPABILITY;
+import static com.emilyfooe.villagersnose.capabilities.Nose.NoseProvider.NOSE_CAP;
 
 @OnlyIn(Dist.CLIENT)
 public class VillagerModelOverride<T extends Entity> extends EntityModel<T> implements IHasHead, IHeadToggle {
@@ -75,9 +75,9 @@ public class VillagerModelOverride<T extends Entity> extends EntityModel<T> impl
     public void render(T entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
         this.setRotationAngles(entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
 
-        if (entityIn.getCapability(MY_CAPABILITY).isPresent()) {
+        if (entityIn.getCapability(NOSE_CAP).isPresent()) {
             VillagersNose.LOGGER.info("Found nose capability");
-            Nose nose = (Nose) entityIn.getCapability(MY_CAPABILITY).orElseThrow(() -> new RuntimeException("No inventory!"));
+            Nose nose = (Nose) entityIn.getCapability(NOSE_CAP).orElseThrow(() -> new RuntimeException("No inventory!"));
             // Add a nose to a villager w/o a nose
             if (nose.getHasNose() && !villagerHead.childModels.contains(villagerNose)) {
                 VillagersNose.LOGGER.info("Adding nose to a nose-blind villager...");

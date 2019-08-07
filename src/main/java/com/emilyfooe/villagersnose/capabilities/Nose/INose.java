@@ -1,4 +1,4 @@
-package com.emilyfooe.villagersnose.capabilities;
+package com.emilyfooe.villagersnose.capabilities.Nose;
 
 public interface INose {
     boolean getHasNose();

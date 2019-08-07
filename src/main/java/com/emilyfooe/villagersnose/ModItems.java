@@ -10,9 +10,9 @@ import java.util.List;
 
 import static com.emilyfooe.villagersnose.VillagersNose.MODID;
 
-public class ModItems {
+class ModItems {
     static List<Item> items = new LinkedList<>();
-    public static Item NOSE = (ArmorItem) registerItemNose("villagers_nose");
+    static Item NOSE = (ArmorItem) registerItemNose("villagers_nose");
 
     private static Item registerItemNose(String name){
         Item nose = new ItemNose().setRegistryName(new ResourceLocation(MODID, name));

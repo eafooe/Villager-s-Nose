@@ -1,8 +1,11 @@
 package com.emilyfooe.villagersnose;
 
-import com.emilyfooe.villagersnose.capabilities.INose;
-import com.emilyfooe.villagersnose.capabilities.Nose;
-import com.emilyfooe.villagersnose.capabilities.NoseStorage;
+import com.emilyfooe.villagersnose.capabilities.Nose.INose;
+import com.emilyfooe.villagersnose.capabilities.Nose.Nose;
+import com.emilyfooe.villagersnose.capabilities.Nose.NoseStorage;
+import com.emilyfooe.villagersnose.capabilities.Timer.ITimer;
+import com.emilyfooe.villagersnose.capabilities.Timer.Timer;
+import com.emilyfooe.villagersnose.capabilities.Timer.TimerStorage;
 import com.emilyfooe.villagersnose.renderer.model.VillagerRendererOverride;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
@@ -33,16 +36,14 @@ public class VillagersNose
 
     private void commonSetup(final FMLCommonSetupEvent event) {
         CapabilityManager.INSTANCE.register(INose.class, new NoseStorage(), Nose::new);
+        CapabilityManager.INSTANCE.register(ITimer.class, new TimerStorage(), Timer::new);
         LOGGER.info("Setup method registered");
     }
 
     private void clientSetup(final FMLClientSetupEvent event) {
        Minecraft mc = Minecraft.getInstance();
        IReloadableResourceManager resourceManager = (IReloadableResourceManager) mc.getResourceManager();
-       //TextureManager textureManager = mc.getTextureManager();
-       //ItemRenderer item = mc.getItemRenderer();
        EntityRendererManager re = mc.getRenderManager();
-       //EntityRendererManager r = new EntityRendererManager(textureManager, item, resourceManager);
        re.register(VillagerEntity.class, new VillagerRendererOverride(re, resourceManager));
        LOGGER.info("Client method registered");
     }
