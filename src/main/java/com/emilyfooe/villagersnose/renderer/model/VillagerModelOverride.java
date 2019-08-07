@@ -1,7 +1,6 @@
 package com.emilyfooe.villagersnose.renderer.model;
 
-import com.emilyfooe.villagersnose.VillagersNose;
-import com.emilyfooe.villagersnose.capabilities.Nose.Nose;
+import com.emilyfooe.villagersnose.capabilities.Nose.INose;
 import net.minecraft.client.renderer.entity.model.EntityModel;
 import net.minecraft.client.renderer.entity.model.IHasHead;
 import net.minecraft.client.renderer.entity.model.IHeadToggle;
@@ -76,19 +75,18 @@ public class VillagerModelOverride<T extends Entity> extends EntityModel<T> impl
         this.setRotationAngles(entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
 
         if (entityIn.getCapability(NOSE_CAP).isPresent()) {
-            VillagersNose.LOGGER.info("Found nose capability");
-            Nose nose = (Nose) entityIn.getCapability(NOSE_CAP).orElseThrow(() -> new RuntimeException("No inventory!"));
+            // VillagersNose.LOGGER.info("Found nose capability");
+            INose noseCap = entityIn.getCapability(NOSE_CAP).orElseThrow(() -> new RuntimeException(""));
             // Add a nose to a villager w/o a nose
-            if (nose.getHasNose() && !villagerHead.childModels.contains(villagerNose)) {
-                VillagersNose.LOGGER.info("Adding nose to a nose-blind villager...");
+            if (noseCap.getHasNose() && !villagerHead.childModels.contains(villagerNose)) {
                 villagerHead.addChild(villagerNose);
-                // Remove a nose from a villager w/ a nose
-            } else if (!nose.getHasNose() && villagerHead.childModels.contains(villagerNose)) {
-                VillagersNose.LOGGER.info("Removing nose from a naughty villager...");
+            }
+            // Remove a nose from a villager w/ a nose
+            else if (!noseCap.getHasNose() && villagerHead.childModels.contains(villagerNose)) {
                 villagerHead.removeChild(villagerNose);
             }
         } else {
-            VillagersNose.LOGGER.info("Could not find nose capability");
+            // VillagersNose.LOGGER.info("Could not find nose capability");
         }
 
         villagerHead.render(scale);

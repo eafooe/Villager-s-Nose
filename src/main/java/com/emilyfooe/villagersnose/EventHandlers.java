@@ -1,10 +1,10 @@
 package com.emilyfooe.villagersnose;
 
-
 import com.emilyfooe.villagersnose.capabilities.Nose.INose;
 import com.emilyfooe.villagersnose.capabilities.Nose.NoseProvider;
 import com.emilyfooe.villagersnose.capabilities.Timer.ITimer;
 import com.emilyfooe.villagersnose.capabilities.Timer.TimerProvider;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.item.ItemStack;
@@ -20,7 +20,8 @@ import static com.emilyfooe.villagersnose.capabilities.Timer.TimerProvider.TIMER
 import static com.emilyfooe.villagersnose.capabilities.Timer.TimerProvider.TIMER_CAP_KEY;
 
 public class EventHandlers {
-    private static int regrowthTime = 200; // (in ticks) 20 ticks a second
+    private static int ticksPerSecond = 20;
+    private static int regrowthTime = Configuration.COMMON.regrowthTime.get() * ticksPerSecond;
 
     // If a villager entity does not have a nose, decrement the nose regrowth timer until it hits zero.
     // When the timer hits zero, regrow the villager's nose.

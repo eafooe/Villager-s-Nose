@@ -36,6 +36,7 @@ public class VillagerHeldItemLayerOverride<T extends LivingEntity> extends Layer
 
             GlStateManager.translatef(0.0F, 0.4F, -0.4F);
             GlStateManager.rotatef(180.0F, 1.0F, 0.0F, 0.0F);
+            //TODO: refactor; ItemCameraTransforms is deprecated
             this.field_215347_a.renderItem(itemstack, entityIn, ItemCameraTransforms.TransformType.GROUND, false);
             if (flag) {
                 GlStateManager.depthMask(true);
