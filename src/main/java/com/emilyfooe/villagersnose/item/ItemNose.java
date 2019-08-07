@@ -4,8 +4,6 @@ import com.emilyfooe.villagersnose.VillagersNose;
 import com.emilyfooe.villagersnose.renderer.model.ModelNose;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.entity.model.BipedModel;
-import net.minecraft.client.renderer.entity.model.RendererModel;
-import net.minecraft.client.renderer.model.ModelBox;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.inventory.EquipmentSlotType;
@@ -24,7 +22,6 @@ public class ItemNose extends ArmorItem implements IForgeItem, IPlantable {
         super(ArmorMaterial.LEATHER, EquipmentSlotType.HEAD, new Item.Properties().maxStackSize(64).rarity(Rarity.COMMON).group(ItemGroup.COMBAT));
     }
 
-
     @OnlyIn(Dist.CLIENT)
     @Nullable
     @Override
@@ -32,11 +29,6 @@ public class ItemNose extends ArmorItem implements IForgeItem, IPlantable {
     {
         VillagersNose.LOGGER.info("getArmorModel fired");
         return (A) new ModelNose();
-        // defaultModel.bipedHead = new ModelNose().bipedNose; // has nose, entire head is tan
-        // defaultModel.bipedHeadwear = new ModelNose().bipedNose; // has nose, but tan area around head
-        // defaultModel.bipedHeadwear.addChild(new ModelNose().bipedNose); (flat, no nose)
-        // defaultModel.bipedHead.addChild(new ModelNose().bipedNose); (flat, no nose)
-
     }
 
     @Override
