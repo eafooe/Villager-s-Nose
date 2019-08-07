@@ -16,8 +16,8 @@ import static com.emilyfooe.villagersnose.capabilities.Nose.NoseProvider.NOSE_CA
 @OnlyIn(Dist.CLIENT)
 public class VillagerModelOverride<T extends Entity> extends EntityModel<T> implements IHasHead, IHeadToggle {
     private final RendererModel villagerHead;
-    private RendererModel villagerHat;
-    private final RendererModel villagerHatAccessory;
+    private RendererModel villagerHeadwear;
+    private final RendererModel villagerHeadwearAccessory;
     private final RendererModel villagerBody;
     private final RendererModel villagerBodyAccessory;
     private final RendererModel villagerArms;
@@ -37,15 +37,15 @@ public class VillagerModelOverride<T extends Entity> extends EntityModel<T> impl
         villagerHead = (new RendererModel(this)).setTextureSize(p_i51059_2_, p_i51059_3_);
         villagerHead.setRotationPoint(0.0F, 0.0F, 0.0F);
         villagerHead.setTextureOffset(0, 0).addBox(-4.0F, -10.0F, -4.0F, 8, 10, 8, p_i51059_1_);
-        villagerHat = (new RendererModel(this)).setTextureSize(p_i51059_2_, p_i51059_3_);
-        villagerHat.setRotationPoint(0.0F, 0.0F, 0.0F);
-        villagerHat.setTextureOffset(32, 0).addBox(-4.0F, -10.0F, -4.0F, 8, 10, 8, p_i51059_1_ + 0.5F);
-        villagerHead.addChild(villagerHat);
-        villagerHatAccessory = (new RendererModel(this)).setTextureSize(p_i51059_2_, p_i51059_3_);
-        villagerHatAccessory.setRotationPoint(0.0F, 0.0F, 0.0F);
-        villagerHatAccessory.setTextureOffset(30, 47).addBox(-8.0F, -8.0F, -6.0F, 16, 16, 1, p_i51059_1_);
-        villagerHatAccessory.rotateAngleX = (-(float) Math.PI / 2F);
-        villagerHat.addChild(villagerHatAccessory);
+        villagerHeadwear = (new RendererModel(this)).setTextureSize(p_i51059_2_, p_i51059_3_);
+        villagerHeadwear.setRotationPoint(0.0F, 0.0F, 0.0F);
+        villagerHeadwear.setTextureOffset(32, 0).addBox(-4.0F, -10.0F, -4.0F, 8, 10, 8, p_i51059_1_ + 0.5F);
+        villagerHead.addChild(villagerHeadwear);
+        villagerHeadwearAccessory = (new RendererModel(this)).setTextureSize(p_i51059_2_, p_i51059_3_);
+        villagerHeadwearAccessory.setRotationPoint(0.0F, 0.0F, 0.0F);
+        villagerHeadwearAccessory.setTextureOffset(30, 47).addBox(-8.0F, -8.0F, -6.0F, 16, 16, 1, p_i51059_1_);
+        villagerHeadwearAccessory.rotateAngleX = (-(float) Math.PI / 2F);
+        villagerHeadwear.addChild(villagerHeadwearAccessory);
         villagerNose = (new RendererModel(this)).setTextureSize(p_i51059_2_, p_i51059_3_);
         villagerNose.setRotationPoint(0.0F, -2.0F, 0.0F);
         villagerNose.setTextureOffset(24, 0).addBox(-1.0F, -1.0F, -6.0F, 2, 4, 2, p_i51059_1_);
@@ -126,7 +126,7 @@ public class VillagerModelOverride<T extends Entity> extends EntityModel<T> impl
 
     public void func_217146_a(boolean p_217146_1_) {
         villagerHead.showModel = p_217146_1_;
-        villagerHat.showModel = p_217146_1_;
-        villagerHatAccessory.showModel = p_217146_1_;
+        villagerHeadwear.showModel = p_217146_1_;
+        villagerHeadwearAccessory.showModel = p_217146_1_;
     }
 }

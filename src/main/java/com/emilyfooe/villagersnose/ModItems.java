@@ -12,7 +12,7 @@ import static com.emilyfooe.villagersnose.VillagersNose.MODID;
 
 class ModItems {
     static List<Item> items = new LinkedList<>();
-    static Item NOSE = (ArmorItem) registerItemNose("villagers_nose");
+    static Item NOSE = (ArmorItem) registerItemNose("nose");
 
     private static Item registerItemNose(String name){
         Item nose = new ItemNose().setRegistryName(new ResourceLocation(MODID, name));
