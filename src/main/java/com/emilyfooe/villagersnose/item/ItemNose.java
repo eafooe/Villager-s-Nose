@@ -1,7 +1,6 @@
 package com.emilyfooe.villagersnose.item;
 
 import com.emilyfooe.villagersnose.Configuration;
-import com.emilyfooe.villagersnose.Utilities;
 import com.emilyfooe.villagersnose.VillagersNose;
 import com.emilyfooe.villagersnose.client.model.ModelNose;
 import net.minecraft.block.Block;
@@ -14,6 +13,8 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.*;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvent;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
@@ -23,6 +24,8 @@ import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.common.extensions.IForgeItem;
 
 import javax.annotation.Nullable;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Random;
 
 public class ItemNose extends ArmorItem implements IForgeItem, IPlantable {
@@ -70,8 +73,7 @@ public class ItemNose extends ArmorItem implements IForgeItem, IPlantable {
                 {
                     VillagersNose.LOGGER.info("Found emeralds. Playing random villager sounds...");
                     Random rand = new Random();
-                    playerEntity.world.playSound(playerEntity, playerEntity.getPosition(), Utilities.getRandomVillagerSound(), SoundCategory.AMBIENT, 1.0F, (rand.nextFloat() - rand.nextFloat()) * 0.2F + 1.0F);
-                    //playerEntity.playSound(Utilities.getRandomVillagerSound(), 1.0F, (rand.nextFloat() - rand.nextFloat()) * 0.2F + 1.0F);
+                    playerEntity.world.playSound(playerEntity, playerEntity.getPosition(), getRandomVillagerSound(), SoundCategory.AMBIENT, 1.0F, (rand.nextFloat() - rand.nextFloat()) * 0.2F + 1.0F);
                 } else {
                     VillagersNose.LOGGER.info("Failed to find emeralds");
                 }
@@ -97,5 +99,20 @@ public class ItemNose extends ArmorItem implements IForgeItem, IPlantable {
     @Override
     public BlockState getPlant(IBlockReader world, BlockPos pos) {
         return null;
+    }
+
+    private static final List<SoundEvent> villagerSounds = createVillagerSoundsList();
+
+    private static List<SoundEvent> createVillagerSoundsList(){
+        List<SoundEvent> list = new LinkedList<>();
+        list.add(SoundEvents.ENTITY_VILLAGER_NO);
+        list.add(SoundEvents.ENTITY_VILLAGER_YES);
+        list.add(SoundEvents.ENTITY_VILLAGER_TRADE);
+        list.add(SoundEvents.ENTITY_VILLAGER_AMBIENT);
+        return list;
+    }
+
+    private static SoundEvent getRandomVillagerSound(){
+        return villagerSounds.get(new Random().nextInt(villagerSounds.size()));
     }
 }
