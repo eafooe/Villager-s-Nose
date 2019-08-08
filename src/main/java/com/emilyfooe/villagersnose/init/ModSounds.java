@@ -10,7 +10,7 @@ import static com.emilyfooe.villagersnose.VillagersNose.MODID;
 
 public class ModSounds {
     public static List<SoundEvent> sounds = new LinkedList<>();
-    public static SoundEvent SOUND_EMERALD = createSound("sound_emerald");
+    public static SoundEvent SOUND_EMERALD = createSound("music.emerald");
 
     private static SoundEvent createSound(String name){
         ResourceLocation location = new ResourceLocation(MODID, name);

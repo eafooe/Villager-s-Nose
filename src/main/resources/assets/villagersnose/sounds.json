@@ -1,8 +1,8 @@
 {
-  "sound_emerald": {
+  "music.emerald": {
     "category": "neutral",
     "sounds": [
-      "villagersnose:music_nose"
+      "villagersnose:music_emerald"
     ]
   }
 }
