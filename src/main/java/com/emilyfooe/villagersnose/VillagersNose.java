@@ -25,7 +25,6 @@ import org.apache.logging.log4j.Logger;
 @Mod(VillagersNose.MODID)
 public class VillagersNose
 {
-    // Directly reference a log4j logger.
     public static final String MODID = "villagersnose";
     public static final Logger LOGGER = LogManager.getLogger();
 

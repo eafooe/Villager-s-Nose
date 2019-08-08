@@ -33,7 +33,7 @@ public class ItemNose extends ArmorItem implements IForgeItem, IPlantable {
         super(ArmorMaterial.LEATHER, EquipmentSlotType.HEAD, new Item.Properties().maxStackSize(64).rarity(Rarity.COMMON).group(ItemGroup.COMBAT));
     }
 
-    private static boolean emeraldsAreNearby(World world, int posX, int posY, int posZ){
+    public static boolean emeraldsAreNearby(World world, int posX, int posY, int posZ){
         int range = Configuration.COMMON.searchRange.get();
         VillagersNose.LOGGER.info("Current position: {" + posX + ", " + posY + ", " + posZ + "}");
         VillagersNose.LOGGER.info("Search range (x): " + (posX - range) + " - " + (posX + range));
@@ -78,6 +78,7 @@ public class ItemNose extends ArmorItem implements IForgeItem, IPlantable {
                     VillagersNose.LOGGER.info("Failed to find emeralds");
                 }
             }
+
 
     }
 
