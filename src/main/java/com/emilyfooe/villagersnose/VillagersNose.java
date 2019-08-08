@@ -6,7 +6,7 @@ import com.emilyfooe.villagersnose.capabilities.Nose.NoseStorage;
 import com.emilyfooe.villagersnose.capabilities.Timer.ITimer;
 import com.emilyfooe.villagersnose.capabilities.Timer.Timer;
 import com.emilyfooe.villagersnose.capabilities.Timer.TimerStorage;
-import com.emilyfooe.villagersnose.renderer.model.VillagerRendererOverride;
+import com.emilyfooe.villagersnose.client.overrides.OverrideVillagerRenderer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
@@ -47,7 +47,7 @@ public class VillagersNose
        Minecraft mc = Minecraft.getInstance();
        IReloadableResourceManager resourceManager = (IReloadableResourceManager) mc.getResourceManager();
        EntityRendererManager re = mc.getRenderManager();
-       re.register(VillagerEntity.class, new VillagerRendererOverride(re, resourceManager));
+       re.register(VillagerEntity.class, new OverrideVillagerRenderer(re, resourceManager));
        LOGGER.info("Client method registered");
     }
 }

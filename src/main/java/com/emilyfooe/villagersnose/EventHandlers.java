@@ -4,6 +4,7 @@ import com.emilyfooe.villagersnose.capabilities.Nose.INose;
 import com.emilyfooe.villagersnose.capabilities.Nose.NoseProvider;
 import com.emilyfooe.villagersnose.capabilities.Timer.ITimer;
 import com.emilyfooe.villagersnose.capabilities.Timer.TimerProvider;
+import com.emilyfooe.villagersnose.init.ModItems;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.item.ItemStack;
@@ -58,7 +59,7 @@ public class EventHandlers {
                     timerCapability.setTimer(regrowthTime);
                     ItemStack shears = event.getEntityPlayer().getHeldItemMainhand();
                     shears.damageItem(1, event.getEntityPlayer(), (exp) -> exp.sendBreakAnimation(event.getHand()));
-                    event.getEntity().entityDropItem(ModItems.NOSE);
+                    event.getEntity().entityDropItem(ModItems.ITEM_NOSE);
                 }
             }
         }

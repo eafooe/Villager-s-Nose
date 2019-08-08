@@ -1,4 +1,4 @@
-package com.emilyfooe.villagersnose.renderer.model;
+package com.emilyfooe.villagersnose.client.overrides;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
@@ -14,14 +14,14 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import javax.annotation.Nonnull;
 
 @OnlyIn(Dist.CLIENT)
-public class VillagerRendererOverride extends MobRenderer<VillagerEntity, VillagerModelOverride<VillagerEntity>> {
+public class OverrideVillagerRenderer extends MobRenderer<VillagerEntity, OverrideVillagerModel<VillagerEntity>> {
     private static final ResourceLocation field_217779_a = new ResourceLocation("textures/entity/villager/villager.png");
 
-    public VillagerRendererOverride(EntityRendererManager rendererManager, IReloadableResourceManager resourceManager){
-        super(rendererManager, new VillagerModelOverride<>(0.0F), 0.5F);
+    public OverrideVillagerRenderer(EntityRendererManager rendererManager, IReloadableResourceManager resourceManager){
+        super(rendererManager, new OverrideVillagerModel<>(0.0F), 0.5F);
         addLayer(new HeadLayer<>(this));
         addLayer(new VillagerLevelPendantLayer<>(this, resourceManager, "villager"));
-        addLayer(new VillagerHeldItemLayerOverride<>(this));
+        addLayer(new OverrideVillagerHeldItemLayer<>(this));
     }
 
 

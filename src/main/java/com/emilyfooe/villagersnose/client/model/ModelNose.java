@@ -1,4 +1,4 @@
-package com.emilyfooe.villagersnose.renderer.model;
+package com.emilyfooe.villagersnose.client.model;
 
 import com.emilyfooe.villagersnose.VillagersNose;
 import net.minecraft.client.renderer.entity.model.BipedModel;

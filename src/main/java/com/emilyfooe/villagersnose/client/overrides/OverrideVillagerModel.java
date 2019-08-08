@@ -1,4 +1,4 @@
-package com.emilyfooe.villagersnose.renderer.model;
+package com.emilyfooe.villagersnose.client.overrides;
 
 import com.emilyfooe.villagersnose.capabilities.Nose.INose;
 import net.minecraft.client.renderer.entity.model.EntityModel;
@@ -14,7 +14,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import static com.emilyfooe.villagersnose.capabilities.Nose.NoseProvider.NOSE_CAP;
 
 @OnlyIn(Dist.CLIENT)
-public class VillagerModelOverride<T extends Entity> extends EntityModel<T> implements IHasHead, IHeadToggle {
+public class OverrideVillagerModel<T extends Entity> extends EntityModel<T> implements IHasHead, IHeadToggle {
     private final RendererModel villagerHead;
     private RendererModel villagerHeadwear;
     private final RendererModel villagerHeadwearAccessory;
@@ -25,14 +25,14 @@ public class VillagerModelOverride<T extends Entity> extends EntityModel<T> impl
     private final RendererModel leftVillagerLeg;
     private final RendererModel villagerNose;
 
-    public VillagerModelOverride(){
+    public OverrideVillagerModel(){
         this(0.0F);
     }
-    VillagerModelOverride(float scale) {
+    OverrideVillagerModel(float scale) {
         this(scale, 64, 64);
     }
 
-    private VillagerModelOverride(float p_i51059_1_, int p_i51059_2_, int p_i51059_3_) {
+    private OverrideVillagerModel(float p_i51059_1_, int p_i51059_2_, int p_i51059_3_) {
         float f = 0.5F;
         villagerHead = (new RendererModel(this)).setTextureSize(p_i51059_2_, p_i51059_3_);
         villagerHead.setRotationPoint(0.0F, 0.0F, 0.0F);

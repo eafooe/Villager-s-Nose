@@ -1,4 +1,4 @@
-package com.emilyfooe.villagersnose.renderer.model;
+package com.emilyfooe.villagersnose.client.overrides;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.block.Block;
@@ -16,10 +16,10 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
-public class VillagerHeldItemLayerOverride<T extends LivingEntity> extends LayerRenderer<T, VillagerModelOverride<T>> {
+public class OverrideVillagerHeldItemLayer<T extends LivingEntity> extends LayerRenderer<T, OverrideVillagerModel<T>> {
     private final ItemRenderer field_215347_a = Minecraft.getInstance().getItemRenderer();
 
-    public VillagerHeldItemLayerOverride(IEntityRenderer<T, VillagerModelOverride<T>> p_i50917_1_) {
+    public OverrideVillagerHeldItemLayer(IEntityRenderer<T, OverrideVillagerModel<T>> p_i50917_1_) {
         super(p_i50917_1_);
     }
 

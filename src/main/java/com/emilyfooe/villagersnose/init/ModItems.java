@@ -1,4 +1,4 @@
-package com.emilyfooe.villagersnose;
+package com.emilyfooe.villagersnose.init;
 
 import com.emilyfooe.villagersnose.item.ItemNose;
 import net.minecraft.item.ArmorItem;
@@ -10,11 +10,11 @@ import java.util.List;
 
 import static com.emilyfooe.villagersnose.VillagersNose.MODID;
 
-class ModItems {
-    static List<Item> items = new LinkedList<>();
-    static Item NOSE = (ArmorItem) registerItemNose("nose");
+public class ModItems {
+    public static List<Item> items = new LinkedList<>();
+    public static Item ITEM_NOSE = (ArmorItem) createItem("item_nose");
 
-    private static Item registerItemNose(String name){
+    private static Item createItem(String name){
         Item nose = new ItemNose().setRegistryName(new ResourceLocation(MODID, name));
         items.add(nose);
         return nose;
