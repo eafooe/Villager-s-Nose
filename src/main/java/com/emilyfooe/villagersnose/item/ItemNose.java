@@ -50,16 +50,10 @@ public class ItemNose extends ArmorItem implements IForgeItem, IPlantable {
                 for (int x = minX; x <= maxX; x++){
                     Block block = world.getBlockState(new BlockPos(x, y, z)).getBlock();
                     if (block == Blocks.EMERALD_BLOCK || block == Blocks.EMERALD_ORE){
-                        if (world.getDayTime() % 40 == 0){
-                            VillagersNose.LOGGER.info("Found emeralds!");
-                        }
                         return true;
                     }
                 }
             }
-        }
-        if (world.getDayTime() % 40 == 0){
-            VillagersNose.LOGGER.info("Failed to find emeralds");
         }
         return false;
     }
@@ -73,9 +67,11 @@ public class ItemNose extends ArmorItem implements IForgeItem, IPlantable {
                 int posZ = (int) Math.floor(playerEntity.posZ);
                 if (emeraldsAreNearby(world, posX, posY, posZ))
                 {
-                    VillagersNose.LOGGER.info("Playing random villager sounds...");
+                    VillagersNose.LOGGER.info("Found emeralds. Playing random villager sounds...");
                     Random rand = new Random();
                     playerEntity.playSound(Utilities.getRandomVillagerSound(), 1.0F, (rand.nextFloat() - rand.nextFloat()) * 0.2F + 1.0F);
+                } else {
+                    VillagersNose.LOGGER.info("Failed to find emeralds");
                 }
             }
         }
