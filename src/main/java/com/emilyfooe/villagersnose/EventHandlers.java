@@ -5,10 +5,13 @@ import com.emilyfooe.villagersnose.capabilities.Nose.NoseProvider;
 import com.emilyfooe.villagersnose.capabilities.Timer.ITimer;
 import com.emilyfooe.villagersnose.capabilities.Timer.TimerProvider;
 import com.emilyfooe.villagersnose.init.ModItems;
+import net.minecraft.client.gui.screen.inventory.MerchantScreen;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ShearsItem;
+import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -61,6 +64,20 @@ public class EventHandlers {
                     shears.damageItem(1, event.getEntityPlayer(), (exp) -> exp.sendBreakAnimation(event.getHand()));
                     event.getEntity().entityDropItem(ModItems.ITEM_NOSE);
                 }
+            }
+        }
+    }
+
+    // Do not allow players to trade with a villager that has no nose
+    @SubscribeEvent
+    public static void guiOpenEvent(GuiOpenEvent event){
+        if (event.getGui() instanceof MerchantScreen && event.getGui().getMinecraft().pointedEntity instanceof VillagerEntity){
+           VillagerEntity villager = (VillagerEntity) event.getGui().getMinecraft().pointedEntity;
+            INose noseCapability = villager.getCapability(NOSE_CAP).orElseThrow(() -> new RuntimeException("No inventory!"));
+            boolean hasNose = noseCapability.getHasNose();
+            if (!hasNose){
+                event.setCanceled(true);
+                event.getGui().getMinecraft().player.sendChatMessage(String.valueOf(new TranslationTextComponent("translation.villagersnose.trade_refusal", (Object) null)));
             }
         }
     }
