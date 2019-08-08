@@ -2,6 +2,6 @@
   "parent": "item/generated",
   "textures":
   {
-    "layer0": "villagersnose:item/super_nose"
+    "layer0": "villagersnose:item/item_super_nose"
   }
 }

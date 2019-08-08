@@ -13,6 +13,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.*;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
@@ -60,7 +61,7 @@ public class ItemNose extends ArmorItem implements IForgeItem, IPlantable {
 
     @Override
     public void onArmorTick(ItemStack itemStack, World world, PlayerEntity playerEntity){
-        if (!world.isRemote){
+
             if (playerEntity.ticksExisted % 20 == 0){
                 int posX = (int) Math.floor(playerEntity.posX);
                 int posY = (int) Math.floor(playerEntity.posY);
@@ -69,12 +70,13 @@ public class ItemNose extends ArmorItem implements IForgeItem, IPlantable {
                 {
                     VillagersNose.LOGGER.info("Found emeralds. Playing random villager sounds...");
                     Random rand = new Random();
-                    playerEntity.playSound(Utilities.getRandomVillagerSound(), 1.0F, (rand.nextFloat() - rand.nextFloat()) * 0.2F + 1.0F);
+                    playerEntity.world.playSound(playerEntity, playerEntity.getPosition(), Utilities.getRandomVillagerSound(), SoundCategory.AMBIENT, 1.0F, (rand.nextFloat() - rand.nextFloat()) * 0.2F + 1.0F);
+                    //playerEntity.playSound(Utilities.getRandomVillagerSound(), 1.0F, (rand.nextFloat() - rand.nextFloat()) * 0.2F + 1.0F);
                 } else {
                     VillagersNose.LOGGER.info("Failed to find emeralds");
                 }
             }
-        }
+
     }
 
 
