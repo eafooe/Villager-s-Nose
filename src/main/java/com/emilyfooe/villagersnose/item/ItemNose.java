@@ -21,6 +21,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.IPlantable;
+import net.minecraftforge.common.PlantType;
 import net.minecraftforge.common.extensions.IForgeItem;
 
 import javax.annotation.Nullable;
@@ -35,17 +36,10 @@ public class ItemNose extends ArmorItem implements IForgeItem, IPlantable {
 
     public static boolean emeraldsAreNearby(World world, int posX, int posY, int posZ){
         int range = Configuration.COMMON.searchRange.get();
-        // VillagersNose.LOGGER.info("Current position: {" + posX + ", " + posY + ", " + posZ + "}");
-        // VillagersNose.LOGGER.info("Search range (x): " + (posX - range) + " - " + (posX + range));
-        // VillagersNose.LOGGER.info("Search range (y): " + (posY - range) + " - " + (posY + range));
-        // VillagersNose.LOGGER.info("Search range (z): " + (posZ - range) + " - " + (posZ + range));
-        // X-Coordinate Range: (posX - 5) to (posX + 5)
         int minX = posX - range;
         int maxX = posX + range;
-        // Z-Coordinate Range: (posZ - 5) to (posZ + 5)
         int minZ = posZ - range;
         int maxZ = posZ + range;
-        // Y-Coordinate Range: (posY - 5) to (posY + 5)
         int minY = posY - range;
         int maxY = posY + range;
 
@@ -64,24 +58,17 @@ public class ItemNose extends ArmorItem implements IForgeItem, IPlantable {
 
     @Override
     public void onArmorTick(ItemStack itemStack, World world, PlayerEntity playerEntity){
-
-            if (playerEntity.ticksExisted % 20 == 0){
-                int posX = (int) Math.floor(playerEntity.posX);
-                int posY = (int) Math.floor(playerEntity.posY);
-                int posZ = (int) Math.floor(playerEntity.posZ);
-                if (emeraldsAreNearby(world, posX, posY, posZ))
-                {
-                    // VillagersNose.LOGGER.info("Found emeralds. Playing random villager sounds...");
-                    Random rand = new Random();
-                    playerEntity.world.playSound(playerEntity, playerEntity.getPosition(), getRandomVillagerSound(), SoundCategory.AMBIENT, 1.0F, (rand.nextFloat() - rand.nextFloat()) * 0.2F + 1.0F);
-                } else {
-                    // VillagersNose.LOGGER.info("Failed to find emeralds");
-                }
+        if (playerEntity.ticksExisted % 20 == 0){
+            int posX = (int) Math.floor(playerEntity.posX);
+            int posY = (int) Math.floor(playerEntity.posY);
+            int posZ = (int) Math.floor(playerEntity.posZ);
+            if (emeraldsAreNearby(world, posX, posY, posZ))
+            {
+                Random rand = new Random();
+                playerEntity.world.playSound(playerEntity, playerEntity.getPosition(), getRandomVillagerSound(), SoundCategory.AMBIENT, 1.0F, (rand.nextFloat() - rand.nextFloat()) * 0.2F + 1.0F);
             }
-
-
+        }
     }
-
 
     @OnlyIn(Dist.CLIENT)
     @Nullable
@@ -100,6 +87,11 @@ public class ItemNose extends ArmorItem implements IForgeItem, IPlantable {
     @Override
     public BlockState getPlant(IBlockReader world, BlockPos pos) {
         return null;
+    }
+
+    @Override
+    public PlantType getPlantType(IBlockReader world, BlockPos pos) {
+        return PlantType.Crop;
     }
 
     private static final List<SoundEvent> villagerSounds = createVillagerSoundsList();
