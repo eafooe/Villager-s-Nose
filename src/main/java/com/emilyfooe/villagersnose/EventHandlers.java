@@ -14,6 +14,7 @@ import net.minecraft.entity.merchant.IMerchant;
 import net.minecraft.entity.merchant.villager.AbstractVillagerEntity;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.MerchantInventory;
 import net.minecraft.inventory.container.MerchantContainer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -94,11 +95,28 @@ public class EventHandlers {
                     }
                     if (!villager.getOffers().isEmpty() && !event.getWorld().isRemote) {
                         event.getEntityPlayer().sendMessage(new TranslationTextComponent("translation.villagersnose.trade_refusal", (Object) null));
+
                     }
                 }
             }
         }
     }
+
+    @SubscribeEvent
+    public static void guiOpenEvent(GuiScreenEvent event){
+        if (event.getGui() instanceof MerchantScreen){
+            IMerchant merchant = ObfuscationReflectionHelper.getPrivateValue(MerchantContainer.class, ((MerchantScreen) event.getGui()).getContainer(), "merchant");
+            if (merchant instanceof VillagerEntity){
+                AbstractVillagerEntity villager = (VillagerEntity) merchant;
+                INose noseCapability = villager.getCapability(NOSE_CAP).orElseThrow(() -> new RuntimeException("No inventory!"));
+                if (!noseCapability.getHasNose()){
+                    event.setCanceled(true);
+                    event.getGui().getMinecraft().player.sendChatMessage(String.valueOf(new TranslationTextComponent("Leave me alone! I miss my nose!", (Object) null)));
+                }
+            }
+        }
+    }
+
 
 
     // Add a nose and timer capability to villager entities
