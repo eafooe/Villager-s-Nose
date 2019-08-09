@@ -5,17 +5,31 @@ import com.emilyfooe.villagersnose.capabilities.Nose.NoseProvider;
 import com.emilyfooe.villagersnose.capabilities.Timer.ITimer;
 import com.emilyfooe.villagersnose.capabilities.Timer.TimerProvider;
 import com.emilyfooe.villagersnose.init.ModItems;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.inventory.MerchantScreen;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.NPCMerchant;
+import net.minecraft.entity.merchant.IMerchant;
+import net.minecraft.entity.merchant.villager.AbstractVillagerEntity;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.container.MerchantContainer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.item.ShearsItem;
+import net.minecraft.stats.Stats;
+import net.minecraft.util.Hand;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraftforge.client.event.EntityViewRenderEvent;
 import net.minecraftforge.client.event.GuiOpenEvent;
+import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
+import net.minecraftforge.event.entity.player.PlayerContainerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
 import static com.emilyfooe.villagersnose.capabilities.Nose.NoseProvider.NOSE_CAP;
 import static com.emilyfooe.villagersnose.capabilities.Nose.NoseProvider.NOSE_CAP_KEY;
@@ -36,6 +50,9 @@ public class EventHandlers {
                 INose noseCap = event.getEntityLiving().getCapability(NOSE_CAP).orElseThrow(() -> new RuntimeException("No inventory!"));
                 ITimer timerCap = event.getEntityLiving().getCapability(TIMER_CAP).orElseThrow(() -> new RuntimeException("No timer!"));
                 if (!noseCap.getHasNose()){
+                    if (villager.getCustomer() != null){
+
+                    }
                     if (timerCap.getTimer() > 0){
                         timerCap.decrementTimer();
                     } else {
@@ -43,21 +60,22 @@ public class EventHandlers {
                     }
                 }
             }
+
         }
     }
 
     // If a player entity right-clicks a villager entity with a nose while holding shears, remove the villager's nose
     // Drop the nose as an item, damage the shears, and set a timer so the nose regrows after a set time
     @SubscribeEvent
-    public static void shearNoseEvent(PlayerInteractEvent.EntityInteract event){
+    public static void shearNoseEvent(PlayerInteractEvent.EntityInteract event) {
         VillagersNose.LOGGER.info("PlayerInteractEvent.EntityInteract event fired.");
-        if (event.getEntityPlayer().getHeldItemMainhand().getItem() instanceof ShearsItem){
-            if (event.getTarget() instanceof VillagerEntity && event.getTarget().getCapability(NOSE_CAP).isPresent()){
+        if (event.getEntityPlayer().getHeldItemMainhand().getItem() instanceof ShearsItem) {
+            if (event.getTarget() instanceof VillagerEntity && event.getTarget().getCapability(NOSE_CAP).isPresent()) {
                 INose noseCapability = event.getTarget().getCapability(NOSE_CAP).orElseThrow(() -> new RuntimeException("No inventory!"));
                 boolean hasNose = noseCapability.getHasNose();
                 ITimer timerCapability = event.getTarget().getCapability(TIMER_CAP).orElseThrow(() -> new RuntimeException("No timer!"));
                 VillagersNose.LOGGER.info("hasNose: " + hasNose);
-                if (hasNose){
+                if (hasNose) {
                     noseCapability.setHasNose(false);
                     timerCapability.setTimer(regrowthTime);
                     ItemStack shears = event.getEntityPlayer().getHeldItemMainhand();
@@ -66,21 +84,22 @@ public class EventHandlers {
                 }
             }
         }
-    }
 
-    // Do not allow players to trade with a villager that has no nose
-    @SubscribeEvent
-    public static void guiOpenEvent(GuiOpenEvent event){
-        if (event.getGui() instanceof MerchantScreen && event.getGui().getMinecraft().pointedEntity instanceof VillagerEntity){
-           VillagerEntity villager = (VillagerEntity) event.getGui().getMinecraft().pointedEntity;
-            INose noseCapability = villager.getCapability(NOSE_CAP).orElseThrow(() -> new RuntimeException("No inventory!"));
-            boolean hasNose = noseCapability.getHasNose();
-            if (!hasNose){
-                event.setCanceled(true);
-                event.getGui().getMinecraft().player.sendChatMessage(String.valueOf(new TranslationTextComponent("translation.villagersnose.trade_refusal", (Object) null)));
+        if (event.getTarget() instanceof VillagerEntity){
+            VillagerEntity villager = (VillagerEntity) event.getTarget();
+            if ((event.getItemStack().getItem() != Items.VILLAGER_SPAWN_EGG && villager.isAlive() && !villager.isSleeping() && !event.getEntityPlayer().isSneaking())){
+                if (!((VillagerEntity) event.getTarget()).isChild()){
+                    if (event.getHand() == Hand.MAIN_HAND) {
+                        event.getEntityPlayer().addStat(Stats.TALKED_TO_VILLAGER);
+                    }
+                    if (!villager.getOffers().isEmpty() && !event.getWorld().isRemote) {
+                        event.getEntityPlayer().sendMessage(new TranslationTextComponent("translation.villagersnose.trade_refusal", (Object) null));
+                    }
+                }
             }
         }
     }
+
 
     // Add a nose and timer capability to villager entities
     @SubscribeEvent

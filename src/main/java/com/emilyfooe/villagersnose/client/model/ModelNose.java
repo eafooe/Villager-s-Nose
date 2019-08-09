@@ -2,10 +2,8 @@ package com.emilyfooe.villagersnose.client.model;
 
 import com.emilyfooe.villagersnose.VillagersNose;
 import com.emilyfooe.villagersnose.item.ItemNose;
-import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.client.renderer.entity.model.RendererModel;
-import net.minecraft.client.renderer.model.ModelBox;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.api.distmarker.Dist;
@@ -13,8 +11,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public class ModelNose extends BipedModel<PlayerEntity> {
-    public static ModelNose noseModel;
-    public final RendererModel bipedNose;
+    private final RendererModel bipedNose;
 
     public ModelNose() {
         this(0.0F, 0.0F, 8, 6);

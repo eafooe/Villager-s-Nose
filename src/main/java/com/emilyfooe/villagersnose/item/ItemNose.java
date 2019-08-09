@@ -35,10 +35,10 @@ public class ItemNose extends ArmorItem implements IForgeItem, IPlantable {
 
     public static boolean emeraldsAreNearby(World world, int posX, int posY, int posZ){
         int range = Configuration.COMMON.searchRange.get();
-        VillagersNose.LOGGER.info("Current position: {" + posX + ", " + posY + ", " + posZ + "}");
-        VillagersNose.LOGGER.info("Search range (x): " + (posX - range) + " - " + (posX + range));
-        VillagersNose.LOGGER.info("Search range (y): " + (posY - range) + " - " + (posY + range));
-        VillagersNose.LOGGER.info("Search range (z): " + (posZ - range) + " - " + (posZ + range));
+        // VillagersNose.LOGGER.info("Current position: {" + posX + ", " + posY + ", " + posZ + "}");
+        // VillagersNose.LOGGER.info("Search range (x): " + (posX - range) + " - " + (posX + range));
+        // VillagersNose.LOGGER.info("Search range (y): " + (posY - range) + " - " + (posY + range));
+        // VillagersNose.LOGGER.info("Search range (z): " + (posZ - range) + " - " + (posZ + range));
         // X-Coordinate Range: (posX - 5) to (posX + 5)
         int minX = posX - range;
         int maxX = posX + range;
@@ -71,11 +71,11 @@ public class ItemNose extends ArmorItem implements IForgeItem, IPlantable {
                 int posZ = (int) Math.floor(playerEntity.posZ);
                 if (emeraldsAreNearby(world, posX, posY, posZ))
                 {
-                    VillagersNose.LOGGER.info("Found emeralds. Playing random villager sounds...");
+                    // VillagersNose.LOGGER.info("Found emeralds. Playing random villager sounds...");
                     Random rand = new Random();
                     playerEntity.world.playSound(playerEntity, playerEntity.getPosition(), getRandomVillagerSound(), SoundCategory.AMBIENT, 1.0F, (rand.nextFloat() - rand.nextFloat()) * 0.2F + 1.0F);
                 } else {
-                    VillagersNose.LOGGER.info("Failed to find emeralds");
+                    // VillagersNose.LOGGER.info("Failed to find emeralds");
                 }
             }
 
