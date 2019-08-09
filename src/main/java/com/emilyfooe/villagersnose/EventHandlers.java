@@ -84,7 +84,7 @@ public class EventHandlers {
                     }
                     if (!villager.getOffers().isEmpty() && !event.getWorld().isRemote) {
                         event.getEntityPlayer().sendMessage(new TranslationTextComponent("translation.villagersnose.trade_refusal", (Object) null));
-
+                        event.setCanceled(true);
                     }
                 }
             }
