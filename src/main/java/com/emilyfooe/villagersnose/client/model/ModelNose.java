@@ -5,6 +5,7 @@ import com.emilyfooe.villagersnose.item.ItemNose;
 import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.client.renderer.entity.model.RendererModel;
+import net.minecraft.client.renderer.model.ModelBox;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.api.distmarker.Dist;
@@ -25,30 +26,19 @@ public class ModelNose extends BipedModel<PlayerEntity> {
         bipedNose = new RendererModel(this);
         bipedNose.setTextureSize(textureWidth, textureHeight); // image x, image y
         bipedNose.addBox(-1.0F, -1.0F, -6.0F, 2, 4, 2, scaleFactor);
-        bipedNose.setRotationPoint(0.0F,  -2.0F, 0.0F);
+        bipedNose.setRotationPoint(0.0F,  rotationY - 2.0F, 0.0F);
         bipedHead.addChild(bipedNose);
         VillagersNose.LOGGER.info("Default offsetY: " + bipedNose.offsetY);
     }
 
-
-    public void render(PlayerEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scale){
-        super.render(entity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
+    @Override
+    public void setRotationAngles(PlayerEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scale){
+        super.setRotationAngles(entity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
         if (ItemNose.emeraldsAreNearby(entity.world, (int) entity.posX, (int) entity.posY, (int) entity.posZ)){
             VillagersNose.LOGGER.info("Found emeralds; wiggling nose!!!");
-            bipedNose.offsetY = MathHelper.cos((ageInTicks % 20) * (0.10F) * ((float) Math.PI)); // * 0.03125F
+            bipedNose.offsetY = MathHelper.cos((ageInTicks % 10) * (0.2F) * ((float) Math.PI)) * 0.03125F;
             VillagersNose.LOGGER.info("Nose y-offset: " + bipedNose.offsetY);
-        } else {
-            bipedNose.offsetY = 0.0F;
         }
     }
 
-    /*public void setRotationAngles(PlayerEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scaleFactor){
-        if (ItemNose.emeraldsAreNearby(entity.world, (int) entity.posX, (int) entity.posY, (int) entity.posZ)){
-            VillagersNose.LOGGER.info("Found emeralds; wiggling nose!!!");
-            //bipedNose.rotateAngleX = MathHelper.cos((float) (Math.PI * ageInTicks));
-            //bipedNose.offsetY = MathHelper.cos((ageInTicks % 20) * (0.10F) * ((float) Math.PI)) * 0.03125F;
-            //bipedNose.offsetY = MathHelper.wrapDegrees(ageInTicks);
-            VillagersNose.LOGGER.info("rotateAngleX: " + bipedNose.rotateAngleX);
-        }
-    }*/
 }
