@@ -5,16 +5,11 @@ import com.emilyfooe.villagersnose.capabilities.Nose.NoseProvider;
 import com.emilyfooe.villagersnose.capabilities.Timer.ITimer;
 import com.emilyfooe.villagersnose.capabilities.Timer.TimerProvider;
 import com.emilyfooe.villagersnose.init.ModItems;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.inventory.MerchantScreen;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.NPCMerchant;
 import net.minecraft.entity.merchant.IMerchant;
 import net.minecraft.entity.merchant.villager.AbstractVillagerEntity;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.MerchantInventory;
 import net.minecraft.inventory.container.MerchantContainer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -22,12 +17,9 @@ import net.minecraft.item.ShearsItem;
 import net.minecraft.stats.Stats;
 import net.minecraft.util.Hand;
 import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraftforge.client.event.EntityViewRenderEvent;
-import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
-import net.minecraftforge.event.entity.player.PlayerContainerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
@@ -51,9 +43,6 @@ public class EventHandlers {
                 INose noseCap = event.getEntityLiving().getCapability(NOSE_CAP).orElseThrow(() -> new RuntimeException("No inventory!"));
                 ITimer timerCap = event.getEntityLiving().getCapability(TIMER_CAP).orElseThrow(() -> new RuntimeException("No timer!"));
                 if (!noseCap.getHasNose()){
-                    if (villager.getCustomer() != null){
-
-                    }
                     if (timerCap.getTimer() > 0){
                         timerCap.decrementTimer();
                     } else {
