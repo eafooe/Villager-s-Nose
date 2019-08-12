@@ -6,16 +6,16 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.items.CapabilityItemHandler;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Objects;
 
 public class NoseProvider implements ICapabilitySerializable<INBT> {
-    public static final ResourceLocation NOSE_CAP_KEY = new ResourceLocation(VillagersNose.MODID, "my_capability");
-
     @CapabilityInject(INose.class)
     public static Capability<INose> NOSE_CAP = null;
 
@@ -36,8 +36,7 @@ public class NoseProvider implements ICapabilitySerializable<INBT> {
     public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
         if (cap == NOSE_CAP){
             return instance.cast();
-        } else {
-            return LazyOptional.empty();
         }
+        return LazyOptional.empty();
     }
 }
