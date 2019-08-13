@@ -2,11 +2,13 @@ package com.emilyfooe.villagersnose;
 
 import com.emilyfooe.villagersnose.capabilities.Nose.INose;
 import com.emilyfooe.villagersnose.capabilities.Nose.NoseProvider;
-import com.emilyfooe.villagersnose.capabilities.Timer.ITimer;
 import com.emilyfooe.villagersnose.capabilities.Timer.TimerProvider;
 import com.emilyfooe.villagersnose.init.ModItems;
+import com.emilyfooe.villagersnose.network.ServerPacket;
+import com.emilyfooe.villagersnose.network.PacketHandler;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.item.ShearsItem;
@@ -15,13 +17,12 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
-import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.network.PacketDistributor;
 
 import static com.emilyfooe.villagersnose.VillagersNose.MODID;
 import static com.emilyfooe.villagersnose.capabilities.Nose.NoseProvider.NOSE_CAP;
-import static com.emilyfooe.villagersnose.capabilities.Timer.TimerProvider.TIMER_CAP;
 import static com.emilyfooe.villagersnose.capabilities.Timer.TimerProvider.TIMER_CAP_KEY;
 
 public class EventHandlers {
@@ -56,8 +57,12 @@ public class EventHandlers {
 
             if (noseCapability.hasNose() && event.getEntityPlayer().getHeldItemMainhand().getItem() instanceof ShearsItem){
                 VillagersNose.LOGGER.info("Player is holding Shears; Villager has Nose");
-                noseCapability.setHasNose(false);
 
+                if (event.getEntityPlayer() instanceof ServerPlayerEntity){
+                    PacketHandler.INSTANCE.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(event::getEntityPlayer), new ServerPacket(villager.getEntityId(), false));
+                }
+
+                //noseCapability.setHasNose(false);
                 ItemStack shears = event.getEntityPlayer().getHeldItemMainhand();
                 if (!event.getWorld().isRemote){
                     shears.damageItem(1, event.getEntityPlayer(), (exp) -> exp.sendBreakAnimation(event.getHand()));

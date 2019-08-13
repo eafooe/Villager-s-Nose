@@ -2,6 +2,8 @@ package com.emilyfooe.villagersnose.client.overrides;
 
 import com.emilyfooe.villagersnose.VillagersNose;
 import com.emilyfooe.villagersnose.capabilities.Nose.INose;
+import com.emilyfooe.villagersnose.network.ClientPacket;
+import com.emilyfooe.villagersnose.network.PacketHandler;
 import net.minecraft.client.renderer.entity.model.EntityModel;
 import net.minecraft.client.renderer.entity.model.IHasHead;
 import net.minecraft.client.renderer.entity.model.IHeadToggle;
@@ -11,6 +13,7 @@ import net.minecraft.entity.merchant.villager.AbstractVillagerEntity;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fml.network.PacketDistributor;
 
 import static com.emilyfooe.villagersnose.capabilities.Nose.NoseProvider.NOSE_CAP;
 
@@ -76,6 +79,7 @@ public class OverrideVillagerModel<T extends Entity> extends EntityModel<T> impl
         this.setRotationAngles(entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
 
         if (entityIn.getCapability(NOSE_CAP).isPresent()) {
+            PacketHandler.INSTANCE.send(PacketDistributor.ALL.noArg(), new ClientPacket(entityIn.getEntityId()));
             VillagersNose.LOGGER.info("Found nose capability");
             INose noseCap = entityIn.getCapability(NOSE_CAP).orElseThrow(() -> new RuntimeException("New runtime exception"));
             // Add a nose to a villager w/o a nose
