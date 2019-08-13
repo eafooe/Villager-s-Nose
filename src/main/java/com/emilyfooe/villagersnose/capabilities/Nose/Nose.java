@@ -1,10 +1,10 @@
 package com.emilyfooe.villagersnose.capabilities.Nose;
 
 public class Nose implements INose {
-    private boolean hasNose;
+    private boolean hasNose = true;
 
     @Override
-    public boolean getHasNose() {
+    public boolean hasNose() {
         return hasNose;
     }
 

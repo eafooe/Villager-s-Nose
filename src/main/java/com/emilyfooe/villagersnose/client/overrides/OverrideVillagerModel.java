@@ -1,5 +1,6 @@
 package com.emilyfooe.villagersnose.client.overrides;
 
+import com.emilyfooe.villagersnose.VillagersNose;
 import com.emilyfooe.villagersnose.capabilities.Nose.INose;
 import net.minecraft.client.renderer.entity.model.EntityModel;
 import net.minecraft.client.renderer.entity.model.IHasHead;
@@ -75,18 +76,20 @@ public class OverrideVillagerModel<T extends Entity> extends EntityModel<T> impl
         this.setRotationAngles(entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
 
         if (entityIn.getCapability(NOSE_CAP).isPresent()) {
-            // VillagersNose.LOGGER.info("Found nose capability");
-            INose noseCap = entityIn.getCapability(NOSE_CAP).orElseThrow(() -> new RuntimeException(""));
+            VillagersNose.LOGGER.info("Found nose capability");
+            INose noseCap = entityIn.getCapability(NOSE_CAP).orElseThrow(() -> new RuntimeException("New runtime exception"));
             // Add a nose to a villager w/o a nose
-            if (noseCap.getHasNose() && !villagerHead.childModels.contains(villagerNose)) {
+            if (noseCap.hasNose() && !villagerHead.childModels.contains(villagerNose)) {
+                VillagersNose.LOGGER.info("Adding nose...");
                 villagerHead.addChild(villagerNose);
             }
             // Remove a nose from a villager w/ a nose
-            else if (!noseCap.getHasNose() && villagerHead.childModels.contains(villagerNose)) {
+            else if (!noseCap.hasNose() && villagerHead.childModels.contains(villagerNose)) {
+                VillagersNose.LOGGER.info("Removing nose...");
                 villagerHead.removeChild(villagerNose);
             }
         } else {
-            // VillagersNose.LOGGER.info("Could not find nose capability");
+            VillagersNose.LOGGER.info("Could not find nose capability");
         }
 
         villagerHead.render(scale);
