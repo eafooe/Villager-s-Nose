@@ -12,7 +12,7 @@ import net.minecraftforge.common.util.LazyOptional;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class NoseProvider implements ICapabilityProvider, ICapabilitySerializable<INBT> {
+public class NoseProvider implements ICapabilitySerializable<INBT> {
     @CapabilityInject(INose.class)
     public static Capability<INose> NOSE_CAP = null;
 
