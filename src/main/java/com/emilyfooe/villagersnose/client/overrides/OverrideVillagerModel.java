@@ -79,8 +79,7 @@ public class OverrideVillagerModel<T extends Entity> extends EntityModel<T> impl
         this.setRotationAngles(entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
 
         if (entityIn.getCapability(NOSE_CAP).isPresent()) {
-            PacketHandler.INSTANCE.send(PacketDistributor.ALL.noArg(), new ClientPacket(entityIn.getEntityId()));
-            VillagersNose.LOGGER.info("Found nose capability");
+            // VillagersNose.LOGGER.info("Found nose capability");
             INose noseCap = entityIn.getCapability(NOSE_CAP).orElseThrow(() -> new RuntimeException("New runtime exception"));
             // Add a nose to a villager w/o a nose
             if (noseCap.hasNose() && !villagerHead.childModels.contains(villagerNose)) {

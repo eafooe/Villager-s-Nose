@@ -4,10 +4,12 @@ import com.emilyfooe.villagersnose.capabilities.Nose.INose;
 import com.emilyfooe.villagersnose.capabilities.Nose.NoseProvider;
 import com.emilyfooe.villagersnose.capabilities.Timer.TimerProvider;
 import com.emilyfooe.villagersnose.init.ModItems;
+import com.emilyfooe.villagersnose.network.ClientPacket;
 import com.emilyfooe.villagersnose.network.ServerPacket;
 import com.emilyfooe.villagersnose.network.PacketHandler;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -17,9 +19,13 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
+import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.network.PacketDistributor;
+
+import java.util.function.Supplier;
 
 import static com.emilyfooe.villagersnose.VillagersNose.MODID;
 import static com.emilyfooe.villagersnose.capabilities.Nose.NoseProvider.NOSE_CAP;
@@ -28,6 +34,21 @@ import static com.emilyfooe.villagersnose.capabilities.Timer.TimerProvider.TIMER
 public class EventHandlers {
     private static int ticksPerSecond = 20;
     private static int regrowthTime = Configuration.COMMON.regrowthTime.get() * ticksPerSecond;
+
+    public static void onStartTracking(PlayerEvent.StartTracking event){
+        if (event.getTarget() instanceof VillagerEntity){
+            int entityId = event.getTarget().getEntityId();
+            PacketHandler.INSTANCE.send(PacketDistributor.PLAYER.with((Supplier<ServerPlayerEntity>) event.getEntityPlayer()), new ClientPacket(entityId));
+        }
+    }
+
+    public static void entityJoinWorldEvent(EntityJoinWorldEvent event){
+        if (event.getEntity() instanceof VillagerEntity){
+            int entityId = event.getEntity().getEntityId();
+            PacketHandler.INSTANCE.send(PacketDistributor.TRACKING_ENTITY.noArg(), new ClientPacket(entityId));
+        }
+    }
+
 
     // If a villager entity does not have a nose, decrement the nose regrowth timer until it hits zero.
     // When the timer hits zero, regrow the villager's nose.

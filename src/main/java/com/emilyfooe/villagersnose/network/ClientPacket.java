@@ -43,7 +43,6 @@ public class ClientPacket {
                 NOSE_CAP.getStorage().writeNBT(NOSE_CAP, cap, null);
                 NOSE_CAP.writeNBT(cap, null);
             }
-
         });
         ctx.get().setPacketHandled(true);
     }
