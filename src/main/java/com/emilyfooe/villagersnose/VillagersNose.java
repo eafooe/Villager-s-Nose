@@ -40,8 +40,6 @@ public class VillagersNose
     private void commonSetup(final FMLCommonSetupEvent event) {
         CapabilityManager.INSTANCE.register(INose.class, new NoseStorage(), Nose::new);
         PacketHandler.register();
-        CapabilityManager.INSTANCE.register(ITimer.class, new TimerStorage(), Timer::new);
-        LOGGER.info("Setup method registered");
     }
 
     private void clientSetup(final FMLClientSetupEvent event) {

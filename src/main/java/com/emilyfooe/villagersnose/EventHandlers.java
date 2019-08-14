@@ -5,17 +5,21 @@ import com.emilyfooe.villagersnose.capabilities.Nose.NoseProvider;
 import com.emilyfooe.villagersnose.init.ModItems;
 import com.emilyfooe.villagersnose.network.ClientPacket;
 import com.emilyfooe.villagersnose.network.PacketHandler;
+import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
+import net.minecraft.entity.monster.ZombieEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.Items;
-import net.minecraft.item.ShearsItem;
+import net.minecraft.item.*;
 import net.minecraft.stats.Stats;
 import net.minecraft.util.Hand;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.event.entity.living.ZombieEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -52,7 +56,6 @@ public class EventHandlers {
         Entity entity = event.getEntity();
         if (entity instanceof VillagerEntity && !event.getWorld().isRemote){
             PacketDistributor.PacketTarget dest = PacketDistributor.TRACKING_ENTITY.with(() -> entity);
-            //java.lang.ClassCastException: net.minecraft.client.multiplayer.ClientChunkProvider cannot be cast to net.minecraft.world.chunk.ServerChunkProvider
             PacketHandler.INSTANCE.send(dest, new ClientPacket(entity.getEntityId()));
         }
     }

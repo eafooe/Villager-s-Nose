@@ -34,25 +34,7 @@ public class ClientPacket {
     // Send from server to client
     static void handle(ClientPacket msg, Supplier<NetworkEvent.Context> ctx){
         ctx.get().enqueueWork(() -> {
-            ServerPlayerEntity serverPlayer = ctx.get().getSender();
-            ClientPlayerEntity clientPlayer = Minecraft.getInstance().player;
-
-            Entity serverVillager = null;
-            if (serverPlayer != null) {
-                serverVillager = serverPlayer.world.getEntityByID(msg.entityId);
-            }
-            Entity clientVillager = clientPlayer.world.getEntityByID(msg.entityId);
-
-            if (serverVillager != null && serverVillager.getCapability(NOSE_CAP).isPresent()) {
-                INose serverCap = serverVillager.getCapability(NOSE_CAP).orElseThrow(NullPointerException::new);
-                boolean hasNose = serverCap.hasNose();
-                VillagersNose.LOGGER.info("Server hasNose: " + hasNose);
-                if (clientVillager != null && clientVillager.getCapability(NOSE_CAP).isPresent()) {
-                    INose clientCap = clientVillager.getCapability(NOSE_CAP).orElseThrow(NullPointerException::new);
-                    clientCap.setHasNose(hasNose);
-                    VillagersNose.LOGGER.info("Client hasNose: " + clientCap.hasNose());
-                }
-            }
+            // ?
         });
         ctx.get().setPacketHandled(true);
     }
