@@ -2,21 +2,17 @@ package com.emilyfooe.villagersnose;
 
 import com.emilyfooe.villagersnose.capabilities.Nose.INose;
 import com.emilyfooe.villagersnose.capabilities.Nose.NoseProvider;
-import com.emilyfooe.villagersnose.capabilities.Timer.TimerProvider;
 import com.emilyfooe.villagersnose.init.ModItems;
 import com.emilyfooe.villagersnose.network.ClientPacket;
-import com.emilyfooe.villagersnose.network.ServerPacket;
 import com.emilyfooe.villagersnose.network.PacketHandler;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.item.ShearsItem;
 import net.minecraft.stats.Stats;
 import net.minecraft.util.Hand;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
@@ -25,88 +21,72 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.network.PacketDistributor;
 
-import java.util.function.Supplier;
-
-import static com.emilyfooe.villagersnose.VillagersNose.MODID;
 import static com.emilyfooe.villagersnose.capabilities.Nose.NoseProvider.NOSE_CAP;
-import static com.emilyfooe.villagersnose.capabilities.Timer.TimerProvider.TIMER_CAP_KEY;
 
 public class EventHandlers {
-    private static int ticksPerSecond = 20;
-    private static int regrowthTime = Configuration.COMMON.regrowthTime.get() * ticksPerSecond;
+    // private static int ticksPerSecond = 20;
+    // static int regrowthTime = Configuration.COMMON.regrowthTime.get() * ticksPerSecond;
 
+    // Add a nose and timer capability to villager entities
+    @SubscribeEvent
+    public static void attachEntityCapabilities(AttachCapabilitiesEvent<Entity> event){
+        if (event.getObject() instanceof VillagerEntity){
+            event.addCapability(NoseProvider.IDENTIFIER, new NoseProvider());
+        }
+    }
+
+    // When a new client starts viewing the entity, notify it of existing data
+    @SubscribeEvent
     public static void onStartTracking(PlayerEvent.StartTracking event){
-        if (event.getTarget() instanceof VillagerEntity){
-            int entityId = event.getTarget().getEntityId();
-            PacketHandler.INSTANCE.send(PacketDistributor.PLAYER.with((Supplier<ServerPlayerEntity>) event.getEntityPlayer()), new ClientPacket(entityId));
+        PlayerEntity player = event.getEntityPlayer();
+        Entity target = event.getTarget();
+        if (player instanceof ServerPlayerEntity && target instanceof VillagerEntity){
+            PacketDistributor.PacketTarget dest = PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) player);
+            PacketHandler.INSTANCE.send(dest, new ClientPacket(target.getEntityId()));
         }
     }
 
+    // Send to all players tracking entity
+    @SubscribeEvent
     public static void entityJoinWorldEvent(EntityJoinWorldEvent event){
-        if (event.getEntity() instanceof VillagerEntity){
-            int entityId = event.getEntity().getEntityId();
-            PacketHandler.INSTANCE.send(PacketDistributor.TRACKING_ENTITY.noArg(), new ClientPacket(entityId));
+        Entity entity = event.getEntity();
+        if (entity instanceof VillagerEntity && !event.getWorld().isRemote){
+            PacketDistributor.PacketTarget dest = PacketDistributor.TRACKING_ENTITY.with(() -> entity);
+            //java.lang.ClassCastException: net.minecraft.client.multiplayer.ClientChunkProvider cannot be cast to net.minecraft.world.chunk.ServerChunkProvider
+            PacketHandler.INSTANCE.send(dest, new ClientPacket(entity.getEntityId()));
         }
     }
-
-
-    // If a villager entity does not have a nose, decrement the nose regrowth timer until it hits zero.
-    // When the timer hits zero, regrow the villager's nose.
-   /* @SubscribeEvent
-    public static void onLivingUpdateEvent(LivingEvent.LivingUpdateEvent event){
-        if (event.getEntityLiving() instanceof VillagerEntity){
-            VillagerEntity villager = (VillagerEntity) event.getEntityLiving();
-            INose noseCapability = villager.getCapability(NOSE_CAP, null).orElseThrow(() -> new RuntimeException("No inventory!"));
-            ITimer timerCap = villager.getCapability(TIMER_CAP).orElseThrow(() -> new RuntimeException("No timer!"));
-            if (!noseCapability.hasNose()){
-                if (timerCap.getTimer() > 0){
-                    timerCap.decrementTimer();
-                } else {
-                    noseCapability.setHasNose(true);
-                }
-            }
-        }
-    }*/
 
     // If a player entity right-clicks a villager entity with a nose while holding shears, remove the villager's nose
     // Drop the nose as an item, damage the shears, and set a timer so the nose regrows after a set time
     @SubscribeEvent
     public static void shearNoseEvent(PlayerInteractEvent.EntityInteract event) {
-        if (event.getTarget() instanceof VillagerEntity && event.getTarget().getCapability(NOSE_CAP, null).isPresent() && event.getHand() == Hand.MAIN_HAND) {
-            VillagerEntity villager = (VillagerEntity) event.getTarget();
-            INose noseCapability = villager.getCapability(NOSE_CAP, null).orElseThrow(() -> new RuntimeException("No inventory!"));
-
-            if (noseCapability.hasNose() && event.getEntityPlayer().getHeldItemMainhand().getItem() instanceof ShearsItem){
-                VillagersNose.LOGGER.info("Player is holding Shears; Villager has Nose");
-
-                if (event.getEntityPlayer() instanceof ServerPlayerEntity){
-                    PacketHandler.INSTANCE.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(event::getEntityPlayer), new ServerPacket(villager.getEntityId(), false));
-                }
-
-                //noseCapability.setHasNose(false);
-                ItemStack shears = event.getEntityPlayer().getHeldItemMainhand();
-                if (!event.getWorld().isRemote){
-                    shears.damageItem(1, event.getEntityPlayer(), (exp) -> exp.sendBreakAnimation(event.getHand()));
-                }
-                event.getEntity().entityDropItem(ModItems.ITEM_NOSE);
-                event.setCanceled(true);
-            } else if ((event.getItemStack().getItem() != Items.VILLAGER_SPAWN_EGG && villager.isAlive() && !villager.isSleeping() && !event.getEntityPlayer().isSneaking() && !villager.isChild())){
-                event.getEntityPlayer().addStat(Stats.TALKED_TO_VILLAGER);
-                if (!villager.getOffers().isEmpty() && !event.getWorld().isRemote) {
-                    event.getEntityPlayer().sendMessage(new TranslationTextComponent("translation.villagersnose.trade_refusal", (Object) null));
-                    event.setCanceled(true);
+        if (event.getEntityPlayer() instanceof ServerPlayerEntity && event.getHand() == Hand.MAIN_HAND){
+            ServerPlayerEntity player = (ServerPlayerEntity) event.getEntityPlayer();
+            if (event.getTarget() instanceof VillagerEntity){
+                VillagerEntity villager = (VillagerEntity) event.getTarget();
+                if (event.getTarget().getCapability(NOSE_CAP).isPresent()){
+                    INose capability = villager.getCapability(NOSE_CAP).orElseThrow(NullPointerException::new);
+                    if (capability.hasNose() && player.getHeldItemMainhand().getItem() instanceof ShearsItem){
+                        capability.setHasNose(false);
+                        PacketDistributor.PacketTarget dest = PacketDistributor.TRACKING_ENTITY.with(event::getTarget);
+                        PacketHandler.INSTANCE.send(dest, new ClientPacket(villager.getEntityId()));
+                        player.getHeldItemMainhand().damageItem(1, player, (exp) -> exp.sendBreakAnimation(event.getHand()));
+                        villager.entityDropItem(ModItems.ITEM_NOSE);
+                        event.setCanceled(true);
+                        return;
+                    }
+                    if (!capability.hasNose()) {
+                        if (event.getItemStack().getItem() != Items.VILLAGER_SPAWN_EGG && villager.isAlive() && !villager.isSleeping() && !player.isSneaking() && !villager.isChild()) {
+                            player.addStat(Stats.TALKED_TO_VILLAGER);
+                            if (!villager.getOffers().isEmpty()) {
+                                player.sendMessage(new TranslationTextComponent("translation.villagersnose.trade_refusal", (Object) null));
+                                event.setCanceled(true);
+                            }
+                        }
+                    }
                 }
             }
-        }
-    }
-
-    public static final ResourceLocation ID_CAPABILITY_NOSE = new ResourceLocation(MODID, "nose_capability");
-    // Add a nose and timer capability to villager entities
-    @SubscribeEvent
-    public static void addNoseBoolean(AttachCapabilitiesEvent<Entity> event){
-        if (event.getObject() instanceof VillagerEntity){
-            event.addCapability(ID_CAPABILITY_NOSE, new NoseProvider());
-            event.addCapability(TIMER_CAP_KEY, new TimerProvider());
         }
     }
 }

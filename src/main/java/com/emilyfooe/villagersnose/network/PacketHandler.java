@@ -16,7 +16,6 @@ public class PacketHandler {
     );
 
     public static void register(){
-        INSTANCE.registerMessage(id++, ServerPacket.class, ServerPacket::encode, ServerPacket::decode, ServerPacket::handle);
         INSTANCE.registerMessage(id++, ClientPacket.class, ClientPacket::encode, ClientPacket::decode, ClientPacket::handle);
     }
 
