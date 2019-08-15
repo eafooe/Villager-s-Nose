@@ -21,6 +21,7 @@ public class NoseProvider implements ICapabilitySerializable<INBT> {
     public static Capability<INose> NOSE_CAP = null;
 
     private INose instance = NOSE_CAP.getDefaultInstance();
+    private final LazyOptional<INose> holder = LazyOptional.of(() -> instance);
 
     @Override
     public INBT serializeNBT() {
@@ -37,6 +38,9 @@ public class NoseProvider implements ICapabilitySerializable<INBT> {
     @Nonnull
     @Override
     public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
-        return NOSE_CAP.orEmpty(cap, LazyOptional.of(() -> instance));
+        if (cap == NOSE_CAP){
+            return holder.cast();
+        }
+        return LazyOptional.empty();
     }
 }

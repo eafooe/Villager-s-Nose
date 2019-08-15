@@ -5,24 +5,20 @@ import com.emilyfooe.villagersnose.capabilities.Nose.NoseProvider;
 import com.emilyfooe.villagersnose.init.ModItems;
 import com.emilyfooe.villagersnose.network.ClientPacket;
 import com.emilyfooe.villagersnose.network.PacketHandler;
-import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
-import net.minecraft.entity.monster.ZombieEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.*;
+import net.minecraft.item.Items;
+import net.minecraft.item.ShearsItem;
 import net.minecraft.stats.Stats;
 import net.minecraft.util.Hand;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
-import net.minecraftforge.event.entity.EntityJoinWorldEvent;
-import net.minecraftforge.event.entity.living.LivingDeathEvent;
-import net.minecraftforge.event.entity.living.ZombieEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.network.NetworkDirection;
 import net.minecraftforge.fml.network.PacketDistributor;
 
 import static com.emilyfooe.villagersnose.capabilities.Nose.NoseProvider.NOSE_CAP;
@@ -46,19 +42,12 @@ public class EventHandlers {
         Entity target = event.getTarget();
         if (player instanceof ServerPlayerEntity && target instanceof VillagerEntity){
             PacketDistributor.PacketTarget dest = PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) player);
-            PacketHandler.INSTANCE.send(dest, new ClientPacket(target.getEntityId()));
+            boolean hasNose = target.getCapability(NOSE_CAP).orElseThrow(NullPointerException::new).hasNose();
+            int entityId = target.getEntityId();
+            PacketHandler.INSTANCE.send(dest, new ClientPacket(entityId, hasNose));
         }
     }
 
-    // Send to all players tracking entity
-    @SubscribeEvent
-    public static void entityJoinWorldEvent(EntityJoinWorldEvent event){
-        Entity entity = event.getEntity();
-        if (entity instanceof VillagerEntity && !event.getWorld().isRemote){
-            PacketDistributor.PacketTarget dest = PacketDistributor.TRACKING_ENTITY.with(() -> entity);
-            PacketHandler.INSTANCE.send(dest, new ClientPacket(entity.getEntityId()));
-        }
-    }
 
     // If a player entity right-clicks a villager entity with a nose while holding shears, remove the villager's nose
     // Drop the nose as an item, damage the shears, and set a timer so the nose regrows after a set time
@@ -73,7 +62,7 @@ public class EventHandlers {
                     if (capability.hasNose() && player.getHeldItemMainhand().getItem() instanceof ShearsItem){
                         capability.setHasNose(false);
                         PacketDistributor.PacketTarget dest = PacketDistributor.TRACKING_ENTITY.with(event::getTarget);
-                        PacketHandler.INSTANCE.send(dest, new ClientPacket(villager.getEntityId()));
+                        PacketHandler.INSTANCE.send(dest, new ClientPacket(villager.getEntityId(), false));
                         player.getHeldItemMainhand().damageItem(1, player, (exp) -> exp.sendBreakAnimation(event.getHand()));
                         villager.entityDropItem(ModItems.ITEM_NOSE);
                         event.setCanceled(true);
