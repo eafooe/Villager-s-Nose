@@ -3,7 +3,6 @@ package com.emilyfooe.villagersnose.network;
 import com.emilyfooe.villagersnose.VillagersNose;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
-import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.network.NetworkEvent;
@@ -24,6 +23,7 @@ public class ClientPacket {
     static void encode(ClientPacket msg, PacketBuffer buffer){
         buffer.writeBoolean(msg.hasNose);
         buffer.writeInt(msg.entityId);
+        // Don't do this; it messes with the buffer:
         //VillagersNose.LOGGER.info("Wrote hasNose: " + buffer.readBoolean());
         //VillagersNose.LOGGER.info("Wrote entityId: " + buffer.readInt());
     }
