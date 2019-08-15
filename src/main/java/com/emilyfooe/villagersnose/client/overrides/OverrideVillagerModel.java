@@ -81,12 +81,12 @@ public class OverrideVillagerModel<T extends Entity> extends EntityModel<T> impl
             INose noseCap = entityIn.getCapability(NOSE_CAP).orElseThrow(() -> new RuntimeException("New runtime exception"));
             // Add a nose to a villager w/o a nose
             if (noseCap.hasNose() && !villagerHead.childModels.contains(villagerNose)) {
-                VillagersNose.LOGGER.info("Adding nose...");
+                //VillagersNose.LOGGER.info("Adding nose...");
                 villagerHead.addChild(villagerNose);
             }
             // Remove a nose from a villager w/ a nose
             else if (!noseCap.hasNose() && villagerHead.childModels.contains(villagerNose)) {
-                VillagersNose.LOGGER.info("Removing nose...");
+               // VillagersNose.LOGGER.info("Removing nose...");
                 villagerHead.removeChild(villagerNose);
             }
         } else {

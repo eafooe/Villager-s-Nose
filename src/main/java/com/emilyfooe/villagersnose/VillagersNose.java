@@ -3,6 +3,9 @@ package com.emilyfooe.villagersnose;
 import com.emilyfooe.villagersnose.capabilities.Nose.INose;
 import com.emilyfooe.villagersnose.capabilities.Nose.Nose;
 import com.emilyfooe.villagersnose.capabilities.Nose.NoseStorage;
+import com.emilyfooe.villagersnose.capabilities.Timer.ITimer;
+import com.emilyfooe.villagersnose.capabilities.Timer.Timer;
+import com.emilyfooe.villagersnose.capabilities.Timer.TimerStorage;
 import com.emilyfooe.villagersnose.client.overrides.OverrideVillagerRenderer;
 import com.emilyfooe.villagersnose.network.PacketHandler;
 import net.minecraft.client.Minecraft;
@@ -35,6 +38,7 @@ public class VillagersNose {
 
     private void commonSetup(final FMLCommonSetupEvent event) {
         CapabilityManager.INSTANCE.register(INose.class, new NoseStorage(), Nose::new);
+        CapabilityManager.INSTANCE.register(ITimer.class, new TimerStorage(), Timer::new);
         PacketHandler.register();
     }
 
