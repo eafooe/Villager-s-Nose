@@ -30,6 +30,7 @@ import static com.emilyfooe.villagersnose.capabilities.Timer.TimerProvider.TIMER
 public class EventHandlers {
     private static int ticksPerSecond = 20;
     private static int regrowthTime = Configuration.COMMON.regrowthTime.get() * ticksPerSecond;
+    private static boolean noseRegenerates = Configuration.COMMON.noseRegenerates.get();
 
     // Add a nose and timer capability to villager entities
     @SubscribeEvent
@@ -52,7 +53,7 @@ public class EventHandlers {
 
     @SubscribeEvent
     public static void onLivingUpdateEvent(LivingEvent.LivingUpdateEvent event) {
-        if (!event.getEntityLiving().world.isRemote && event.getEntityLiving() instanceof VillagerEntity) {
+        if (!event.getEntityLiving().world.isRemote && event.getEntityLiving() instanceof VillagerEntity && noseRegenerates) {
             INose noseCap = event.getEntityLiving().getCapability(NOSE_CAP).orElseThrow(NullPointerException::new);
             if (!noseCap.hasNose()) {
                 ITimer timerCap = event.getEntityLiving().getCapability(TIMER_CAP).orElseThrow(NullPointerException::new);

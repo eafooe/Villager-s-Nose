@@ -9,6 +9,7 @@ public class Configuration {
     public static class Common {
         public final ForgeConfigSpec.IntValue regrowthTime;
         public final ForgeConfigSpec.IntValue searchRange;
+        public final ForgeConfigSpec.BooleanValue noseRegenerates;
 
         Common(ForgeConfigSpec.Builder builder) {
             builder.push("Common Settings");
@@ -17,8 +18,12 @@ public class Configuration {
                     .defineInRange("noseRegrowthTime", 900, 30, 86400);
 
             searchRange = builder
-                    .comment("The range, in blocks, to search for emeralds. The default is 8 blocks")
-                    .defineInRange("emeraldSearchRange", 8, 1, 24);
+                    .comment("The range, in blocks, to search for emeralds. The default is 3 blocks")
+                    .defineInRange("emeraldSearchRange", 3, 1, 8);
+
+            noseRegenerates = builder
+                    .comment("Whether a villager's nose should grow back after it is removed. The default is true")
+                    .define("canNoseRegenerate", true);
             builder.pop();
         }
 

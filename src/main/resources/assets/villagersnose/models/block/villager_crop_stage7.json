@@ -1,0 +1,35 @@
+{
+  "textures": {
+    "nose": "villagersnose:block/villager",
+    "head": "villagersnose:block/villager"
+  },
+  "elements": [
+    {
+      "_comment": "Nose",
+      "from": [2, 8, 7],
+      "to": [6, 10, 9],
+      "faces": {
+        "down":   {"texture": "#nose", "uv": [ 26, 0, 28, 2 ]},
+        "up":     {"texture": "#nose", "uv": [ 26, 0, 28, 2 ]},
+        "north":  {"texture": "#nose", "uv": [ 26, 2, 28, 6 ]},
+        "south":  {"texture": "#nose", "uv": [ 26, 2, 28, 6 ]},
+        "west":   {"texture": "#nose", "uv": [ 24, 2, 26, 6 ]},
+        "east":   {"texture": "#nose", "uv": [ 24, 2, 26, 6 ]}
+
+      }
+    },
+    {
+      "_comment": "Head",
+      "from": [3, 0, 4],
+      "to": [13, 8, 12],
+      "faces": {
+        "down":   {"texture": "#head", "uv": [ 8, 0, 16, 8 ], "cullface": "down"},
+        "up":     {"texture": "#head", "uv": [ 8, 0, 16, 8 ]},
+        "north":  {"texture": "#head", "uv": [ 8, 8, 16, 18 ]},
+        "south":  {"texture": "#head", "uv": [ 5, 5, 6, 11 ]},
+        "west":   {"texture": "#head", "uv": [ 0, 8, 8, 18 ]},
+        "east":   {"texture": "#head", "uv": [ 16, 8, 24, 18 ]}
+      }
+    }
+  ]
+}

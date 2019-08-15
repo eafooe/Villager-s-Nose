@@ -1,7 +1,8 @@
 package com.emilyfooe.villagersnose.init;
 
-import com.emilyfooe.villagersnose.block.BlockVillagerPlant;
+import com.emilyfooe.villagersnose.block.BlockVillagerCrop;
 import net.minecraft.block.Block;
+import net.minecraft.block.CropsBlock;
 import net.minecraft.util.ResourceLocation;
 
 import java.util.LinkedList;
@@ -11,10 +12,10 @@ import static com.emilyfooe.villagersnose.VillagersNose.MODID;
 
 public class ModBlocks {
     public static List<Block> blocks = new LinkedList<>();
-    public static Block BLOCK_VILLAGER_PLANT = createBlock("block_villager_plant");
+    public static CropsBlock VILLAGER_CROP = (CropsBlock) createVillagerCropBlock("block_villager_crop");
 
-    private static Block createBlock(String name) {
-        Block block = new BlockVillagerPlant().setRegistryName(new ResourceLocation(MODID, name));
+    private static Block createVillagerCropBlock(String name){
+        Block block = new BlockVillagerCrop().setRegistryName(new ResourceLocation(MODID, name));
         blocks.add(block);
         return block;
     }
