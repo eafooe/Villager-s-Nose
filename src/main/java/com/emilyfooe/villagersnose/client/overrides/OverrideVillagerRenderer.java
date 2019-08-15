@@ -17,7 +17,7 @@ import javax.annotation.Nonnull;
 public class OverrideVillagerRenderer extends MobRenderer<VillagerEntity, OverrideVillagerModel<VillagerEntity>> {
     private static final ResourceLocation field_217779_a = new ResourceLocation("textures/entity/villager/villager.png");
 
-    public OverrideVillagerRenderer(EntityRendererManager rendererManager, IReloadableResourceManager resourceManager){
+    public OverrideVillagerRenderer(EntityRendererManager rendererManager, IReloadableResourceManager resourceManager) {
         super(rendererManager, new OverrideVillagerModel<>(0.0F), 0.5F);
         addLayer(new HeadLayer<>(this));
         addLayer(new VillagerLevelPendantLayer<>(this, resourceManager, "villager"));
@@ -32,7 +32,7 @@ public class OverrideVillagerRenderer extends MobRenderer<VillagerEntity, Overri
     protected void preRenderCallback(VillagerEntity entitylivingbaseIn, float partialTickTime) {
         float f = 0.9375F;
         if (entitylivingbaseIn.isChild()) {
-            f = (float)((double)f * 0.5D);
+            f = (float) ((double) f * 0.5D);
             this.shadowSize = 0.25F;
         } else {
             this.shadowSize = 0.5F;

@@ -25,7 +25,7 @@ public class TimerProvider implements ICapabilitySerializable<INBT> {
     @Nonnull
     @Override
     public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
-        if (cap ==  TIMER_CAP){
+        if (cap == TIMER_CAP) {
             return holder.cast();
         }
         return LazyOptional.empty();

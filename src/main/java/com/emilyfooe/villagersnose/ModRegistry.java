@@ -17,23 +17,26 @@ import static com.emilyfooe.villagersnose.VillagersNose.MODID;
 @Mod.EventBusSubscriber(modid = MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ModRegistry {
 
+    // Register all of the items in ModItems
     @SubscribeEvent
-    public static void onItemRegistry(RegistryEvent.Register<Item> event){
-        for(Item item : ModItems.items){
+    public static void onItemRegistry(RegistryEvent.Register<Item> event) {
+        for (Item item : ModItems.items) {
             event.getRegistry().register(item);
         }
     }
 
+    // Register all of the blocks in ModBlocks
     @SubscribeEvent
-    public static void blockRegistry(RegistryEvent.Register<Block> event){
-        for(Block block : ModBlocks.blocks){
+    public static void blockRegistry(RegistryEvent.Register<Block> event) {
+        for (Block block : ModBlocks.blocks) {
             event.getRegistry().register(block);
         }
     }
 
+    // Register all of the sounds in ModSounds
     @SubscribeEvent
-    public static void soundRegistry(RegistryEvent.Register<SoundEvent> event){
-        for (SoundEvent sound: ModSounds.sounds){
+    public static void soundRegistry(RegistryEvent.Register<SoundEvent> event) {
+        for (SoundEvent sound : ModSounds.sounds) {
             event.getRegistry().register(sound);
         }
     }

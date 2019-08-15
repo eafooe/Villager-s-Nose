@@ -5,11 +5,12 @@ import net.minecraftforge.common.ForgeConfigSpec;
 public class Configuration {
     private static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
     public static final Common COMMON = new Common(BUILDER);
-    public static class Common{
+
+    public static class Common {
         public final ForgeConfigSpec.IntValue regrowthTime;
         public final ForgeConfigSpec.IntValue searchRange;
 
-        Common(ForgeConfigSpec.Builder builder){
+        Common(ForgeConfigSpec.Builder builder) {
             builder.push("Common Settings");
             regrowthTime = builder
                     .comment("The time, in seconds, to regrow a villager's nose. The default is 900 seconds, i.e. 15 minutes")
@@ -23,5 +24,6 @@ public class Configuration {
 
 
     }
+
     static final ForgeConfigSpec SPEC = BUILDER.build();
 }

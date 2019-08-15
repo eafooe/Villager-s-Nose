@@ -14,7 +14,7 @@ public class ModItems {
     public static List<Item> items = new LinkedList<>();
     public static Item ITEM_NOSE = (ArmorItem) createItem("item_nose");
 
-    private static Item createItem(String name){
+    private static Item createItem(String name) {
         Item nose = new ItemNose().setRegistryName(new ResourceLocation(MODID, name));
         items.add(nose);
         return nose;

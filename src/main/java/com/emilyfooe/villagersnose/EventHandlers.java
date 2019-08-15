@@ -32,20 +32,20 @@ public class EventHandlers {
 
     // Add a nose and timer capability to villager entities
     @SubscribeEvent
-    public static void attachEntityCapabilities(AttachCapabilitiesEvent<Entity> event){
-        if (event.getObject() instanceof VillagerEntity){
+    public static void attachEntityCapabilities(AttachCapabilitiesEvent<Entity> event) {
+        if (event.getObject() instanceof VillagerEntity) {
             event.addCapability(NoseProvider.IDENTIFIER, new NoseProvider());
             event.addCapability(TimerProvider.IDENTIFIER, new TimerProvider());
         }
     }
 
     @SubscribeEvent
-    public static void onLivingUpdateEvent(LivingEvent.LivingUpdateEvent event){
-        if (!event.getEntityLiving().world.isRemote && event.getEntityLiving() instanceof VillagerEntity){
+    public static void onLivingUpdateEvent(LivingEvent.LivingUpdateEvent event) {
+        if (!event.getEntityLiving().world.isRemote && event.getEntityLiving() instanceof VillagerEntity) {
             INose noseCap = event.getEntityLiving().getCapability(NOSE_CAP).orElseThrow(NullPointerException::new);
-            if (!noseCap.hasNose()){
+            if (!noseCap.hasNose()) {
                 ITimer timerCap = event.getEntityLiving().getCapability(TIMER_CAP).orElseThrow(NullPointerException::new);
-                if (timerCap.getTimer() > 0){
+                if (timerCap.getTimer() > 0) {
                     timerCap.decrementTimer();
                 } else {
                     noseCap.setHasNose(true);
@@ -56,10 +56,10 @@ public class EventHandlers {
 
     // When a new client starts viewing the entity, notify it of existing data
     @SubscribeEvent
-    public static void onStartTracking(PlayerEvent.StartTracking event){
+    public static void onStartTracking(PlayerEvent.StartTracking event) {
         PlayerEntity player = event.getEntityPlayer();
         Entity target = event.getTarget();
-        if (player instanceof ServerPlayerEntity && target instanceof VillagerEntity){
+        if (player instanceof ServerPlayerEntity && target instanceof VillagerEntity) {
             PacketDistributor.PacketTarget dest = PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) player);
             boolean hasNose = target.getCapability(NOSE_CAP).orElseThrow(NullPointerException::new).hasNose();
             int entityId = target.getEntityId();
@@ -72,13 +72,13 @@ public class EventHandlers {
     // Drop the nose as an item, damage the shears, and set a timer so the nose regrows after a set time
     @SubscribeEvent
     public static void shearNoseEvent(PlayerInteractEvent.EntityInteract event) {
-        if (event.getEntityPlayer() instanceof ServerPlayerEntity && event.getHand() == Hand.MAIN_HAND){
+        if (event.getEntityPlayer() instanceof ServerPlayerEntity && event.getHand() == Hand.MAIN_HAND) {
             ServerPlayerEntity player = (ServerPlayerEntity) event.getEntityPlayer();
-            if (event.getTarget() instanceof VillagerEntity){
+            if (event.getTarget() instanceof VillagerEntity) {
                 VillagerEntity villager = (VillagerEntity) event.getTarget();
-                if (event.getTarget().getCapability(NOSE_CAP).isPresent()){
+                if (event.getTarget().getCapability(NOSE_CAP).isPresent()) {
                     INose capability = villager.getCapability(NOSE_CAP).orElseThrow(NullPointerException::new);
-                    if (capability.hasNose() && player.getHeldItemMainhand().getItem() instanceof ShearsItem){
+                    if (capability.hasNose() && player.getHeldItemMainhand().getItem() instanceof ShearsItem) {
                         capability.setHasNose(false);
                         ITimer timerCap = villager.getCapability(TIMER_CAP).orElseThrow(NullPointerException::new);
                         timerCap.setTimer(regrowthTime);

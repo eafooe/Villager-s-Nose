@@ -38,7 +38,7 @@ public class NoseProvider implements ICapabilitySerializable<INBT> {
     @Nonnull
     @Override
     public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
-        if (cap == NOSE_CAP){
+        if (cap == NOSE_CAP) {
             return holder.cast();
         }
         return LazyOptional.empty();

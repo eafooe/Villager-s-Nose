@@ -21,8 +21,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 @Mod(VillagersNose.MODID)
-public class VillagersNose
-{
+public class VillagersNose {
     public static final String MODID = "villagersnose";
     public static final Logger LOGGER = LogManager.getLogger();
 
@@ -40,10 +39,10 @@ public class VillagersNose
     }
 
     private void clientSetup(final FMLClientSetupEvent event) {
-       Minecraft mc = Minecraft.getInstance();
-       IReloadableResourceManager resourceManager = (IReloadableResourceManager) mc.getResourceManager();
-       EntityRendererManager re = mc.getRenderManager();
-       re.register(VillagerEntity.class, new OverrideVillagerRenderer(re, resourceManager));
-       LOGGER.info("Client method registered");
+        Minecraft mc = Minecraft.getInstance();
+        IReloadableResourceManager resourceManager = (IReloadableResourceManager) mc.getResourceManager();
+        EntityRendererManager re = mc.getRenderManager();
+        re.register(VillagerEntity.class, new OverrideVillagerRenderer(re, resourceManager));
+        LOGGER.info("Client method registered");
     }
 }
