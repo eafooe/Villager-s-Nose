@@ -7,6 +7,7 @@ import com.emilyfooe.villagersnose.capabilities.Timer.ITimer;
 import com.emilyfooe.villagersnose.capabilities.Timer.Timer;
 import com.emilyfooe.villagersnose.capabilities.Timer.TimerStorage;
 import com.emilyfooe.villagersnose.client.overrides.OverrideVillagerRenderer;
+import com.emilyfooe.villagersnose.network.PacketHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
@@ -23,8 +24,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 @Mod(VillagersNose.MODID)
-public class VillagersNose
-{
+public class VillagersNose {
     public static final String MODID = "villagersnose";
     public static final Logger LOGGER = LogManager.getLogger();
 
@@ -39,14 +39,14 @@ public class VillagersNose
     private void commonSetup(final FMLCommonSetupEvent event) {
         CapabilityManager.INSTANCE.register(INose.class, new NoseStorage(), Nose::new);
         CapabilityManager.INSTANCE.register(ITimer.class, new TimerStorage(), Timer::new);
-        LOGGER.info("Setup method registered");
+        PacketHandler.register();
     }
 
     private void clientSetup(final FMLClientSetupEvent event) {
-       Minecraft mc = Minecraft.getInstance();
-       IReloadableResourceManager resourceManager = (IReloadableResourceManager) mc.getResourceManager();
-       EntityRendererManager re = mc.getRenderManager();
-       re.register(VillagerEntity.class, new OverrideVillagerRenderer(re, resourceManager));
-       LOGGER.info("Client method registered");
+        Minecraft mc = Minecraft.getInstance();
+        IReloadableResourceManager resourceManager = (IReloadableResourceManager) mc.getResourceManager();
+        EntityRendererManager re = mc.getRenderManager();
+        re.register(VillagerEntity.class, new OverrideVillagerRenderer(re, resourceManager));
+        LOGGER.info("Client method registered");
     }
 }

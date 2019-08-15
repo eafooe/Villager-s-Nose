@@ -70,6 +70,7 @@ public class ItemNose extends ArmorItem implements IForgeItem, IPlantable {
         }
     }
 
+    @SuppressWarnings("unchecked")
     @OnlyIn(Dist.CLIENT)
     @Nullable
     @Override

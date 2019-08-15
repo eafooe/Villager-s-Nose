@@ -23,15 +23,15 @@ public class ModelNose extends BipedModel<PlayerEntity> {
         bipedNose = new RendererModel(this);
         bipedNose.setTextureSize(textureWidth, textureHeight); // image x, image y
         bipedNose.addBox(-1.0F, -1.0F, -6.0F, 2, 4, 2, scaleFactor);
-        bipedNose.setRotationPoint(0.0F,  rotationY - 2.0F, 0.0F);
+        bipedNose.setRotationPoint(0.0F, rotationY - 2.0F, 0.0F);
         bipedHead.addChild(bipedNose);
         VillagersNose.LOGGER.info("Default offsetY: " + bipedNose.offsetY);
     }
 
     @Override
-    public void setRotationAngles(PlayerEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scale){
+    public void setRotationAngles(PlayerEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
         super.setRotationAngles(entity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
-        if (ItemNose.emeraldsAreNearby(entity.world, (int) entity.posX, (int) entity.posY, (int) entity.posZ)){
+        if (ItemNose.emeraldsAreNearby(entity.world, (int) entity.posX, (int) entity.posY, (int) entity.posZ)) {
             VillagersNose.LOGGER.info("Found emeralds; wiggling nose!!!");
             bipedNose.offsetY = MathHelper.cos((ageInTicks % 10) * (0.2F) * ((float) Math.PI)) * 0.03125F;
             VillagersNose.LOGGER.info("Nose y-offset: " + bipedNose.offsetY);

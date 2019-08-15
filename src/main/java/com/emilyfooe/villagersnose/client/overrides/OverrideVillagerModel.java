@@ -26,15 +26,16 @@ public class OverrideVillagerModel<T extends Entity> extends EntityModel<T> impl
     private final RendererModel leftVillagerLeg;
     private final RendererModel villagerNose;
 
-    public OverrideVillagerModel(){
+    /*public OverrideVillagerModel(){
         this(0.0F);
-    }
+    }*/
+
     OverrideVillagerModel(float scale) {
         this(scale, 64, 64);
     }
 
     private OverrideVillagerModel(float p_i51059_1_, int p_i51059_2_, int p_i51059_3_) {
-        float f = 0.5F;
+        // float f = 0.5F;
         villagerHead = (new RendererModel(this)).setTextureSize(p_i51059_2_, p_i51059_3_);
         villagerHead.setRotationPoint(0.0F, 0.0F, 0.0F);
         villagerHead.setTextureOffset(0, 0).addBox(-4.0F, -10.0F, -4.0F, 8, 10, 8, p_i51059_1_);
@@ -76,16 +77,16 @@ public class OverrideVillagerModel<T extends Entity> extends EntityModel<T> impl
         this.setRotationAngles(entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
 
         if (entityIn.getCapability(NOSE_CAP).isPresent()) {
-            VillagersNose.LOGGER.info("Found nose capability");
+            // VillagersNose.LOGGER.info("Found nose capability");
             INose noseCap = entityIn.getCapability(NOSE_CAP).orElseThrow(() -> new RuntimeException("New runtime exception"));
             // Add a nose to a villager w/o a nose
             if (noseCap.hasNose() && !villagerHead.childModels.contains(villagerNose)) {
-                VillagersNose.LOGGER.info("Adding nose...");
+                //VillagersNose.LOGGER.info("Adding nose...");
                 villagerHead.addChild(villagerNose);
             }
             // Remove a nose from a villager w/ a nose
             else if (!noseCap.hasNose() && villagerHead.childModels.contains(villagerNose)) {
-                VillagersNose.LOGGER.info("Removing nose...");
+               // VillagersNose.LOGGER.info("Removing nose...");
                 villagerHead.removeChild(villagerNose);
             }
         } else {
