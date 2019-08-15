@@ -17,6 +17,7 @@ import net.minecraft.stats.Stats;
 import net.minecraft.util.Hand;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
+import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -36,6 +37,16 @@ public class EventHandlers {
         if (event.getObject() instanceof VillagerEntity) {
             event.addCapability(NoseProvider.IDENTIFIER, new NoseProvider());
             event.addCapability(TimerProvider.IDENTIFIER, new TimerProvider());
+        }
+    }
+
+    @SubscribeEvent
+    public static void entityJoinWorld(EntityJoinWorldEvent event){
+        if (event.getEntity() instanceof VillagerEntity){
+            ITimer timerCap = event.getEntity().getCapability(TIMER_CAP).orElseThrow(NullPointerException::new);
+            if (timerCap.getTimer() > regrowthTime){
+                timerCap.setTimer(regrowthTime);
+            }
         }
     }
 
@@ -70,7 +81,6 @@ public class EventHandlers {
             PacketHandler.INSTANCE.send(dest, new ClientPacket(entityId, hasNose));
         }
     }
-
 
     // If a player entity right-clicks a villager entity with a nose while holding shears, remove the villager's nose
     // Drop the nose as an item, damage the shears, and set a timer so the nose regrows after a set time
