@@ -1,34 +1,46 @@
 {
   "textures": {
-    "nose": "villagersnose:block/villager",
-    "head": "villagersnose:block/villager"
+    "nose_front": "villagersnose:block/villager_crop/nose/nose_front",
+    "nose_side": "villagersnose:block/villager_crop/nose/nose_side",
+
+    "nose_top": "villagersnose:block/villager_crop/nose/nose_top",
+    "nose_bottom": "villagersnose:block/villager_crop/nose/nose_bottom",
+
+    "head_up"   : "villagersnose:block/villager_crop/head/head_up",
+    "head_down" : "villagersnose:block/villager_crop/head/head_down",
+
+    "head_north": "villagersnose:block/villager_crop/head/head_north",
+    "head_south": "villagersnose:block/villager_crop/head/head_south",
+
+    "head_east" : "villagersnose:block/villager_crop/head/head_east",
+    "head_west" : "villagersnose:block/villager_crop/head/head_west"
+
   },
   "elements": [
     {
       "_comment": "Nose",
-      "from": [2, 6, 7],
-      "to": [6, 8, 9],
+      "from": [7, 6, 10],
+      "to": [9, 8, 14],
       "faces": {
-        "down":   {"texture": "#nose", "uv": [ 26, 0, 28, 2 ]},
-        "up":     {"texture": "#nose", "uv": [ 26, 0, 28, 2 ]},
-        "north":  {"texture": "#nose", "uv": [ 26, 2, 28, 6 ]},
-        "south":  {"texture": "#nose", "uv": [ 26, 2, 28, 6 ]},
-        "west":   {"texture": "#nose", "uv": [ 24, 2, 26, 6 ]},
-        "east":   {"texture": "#nose", "uv": [ 24, 2, 26, 6 ]}
-
+        "south":  {"texture": "#nose_front"},
+        "north":  {"texture": "#nose_front"},
+        "up":     {"texture": "#nose_top"},
+        "down":   {"texture": "#nose_bottom"},
+        "west":   {"texture": "#nose_side"},
+        "east":   {"texture": "#nose_side"}
       }
     },
     {
       "_comment": "Head",
-      "from": [3, 0, 4],
-      "to": [13, 6, 12],
+      "from": [4, 0, 3],
+      "to": [12, 6, 13],
       "faces": {
-        "down":   {"texture": "#head", "uv": [ 8, 2, 16, 8 ], "cullface": "down"},
-        "up":     {"texture": "#head", "uv": [ 8, 2, 16, 8 ]},
-        "north":  {"texture": "#head", "uv": [ 8, 8, 16, 18 ]},
-        "south":  {"texture": "#head", "uv": [ 5, 5, 6, 11 ]},
-        "west":   {"texture": "#head", "uv": [ 2, 8, 8, 18 ]},
-        "east":   {"texture": "#head", "uv": [ 16, 8, 22, 18 ]}
+        "up":     {"texture": "#head_up", "uv": [ 0, 0, 8, 10 ]},
+        "down":   {"texture": "#head_down", "uv": [ 0, 0, 8, 10 ], "cullface": "down"},
+        "north":  {"texture": "#head_north", "uv": [0, 2, 8, 8]},
+        "south":  {"texture": "#head_south", "uv": [0, 0, 8, 6]},
+        "east":   {"texture": "#head_east", "uv": [0, 0, 6, 10]},
+        "west":   {"texture": "#head_west", "uv": [2, 0, 8, 10]}
       }
     }
   ]
