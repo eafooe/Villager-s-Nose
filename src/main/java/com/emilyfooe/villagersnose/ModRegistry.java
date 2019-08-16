@@ -2,10 +2,8 @@ package com.emilyfooe.villagersnose;
 
 import com.emilyfooe.villagersnose.init.ModBlocks;
 import com.emilyfooe.villagersnose.init.ModItems;
-import com.emilyfooe.villagersnose.init.ModSounds;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
-import net.minecraft.util.SoundEvent;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -31,12 +29,5 @@ public class ModRegistry {
         }
     }
 
-    // Register all of the sounds in ModSounds
-    @SubscribeEvent
-    public static void soundRegistry(RegistryEvent.Register<SoundEvent> event) {
-        for (SoundEvent sound : ModSounds.sounds) {
-            event.getRegistry().register(sound);
-        }
-    }
 
 }

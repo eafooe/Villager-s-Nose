@@ -1,10 +1,10 @@
 {
   "textures": {
-    "nose_front": "villagersnose:block/villager_crop/nose/nose_front",
-    "nose_side": "villagersnose:block/villager_crop/nose/nose_side",
+    "nose_front": "villagersnose:block/villager_crop/nose/nose_front_or_top",
+    "nose_side": "villagersnose:block/villager_crop/nose/nose_side_or_bottom",
 
-    "nose_top": "villagersnose:block/villager_crop/nose/nose_top",
-    "nose_bottom": "villagersnose:block/villager_crop/nose/nose_bottom",
+    "nose_top": "villagersnose:block/villager_crop/nose/nose_front_or_top",
+    "nose_bottom": "villagersnose:block/villager_crop/nose/nose_side_or_bottom",
 
     "head_up"   : "villagersnose:block/villager_crop/head/head_up",
     "head_down" : "villagersnose:block/villager_crop/head/head_down",
