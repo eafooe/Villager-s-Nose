@@ -1,6 +1,6 @@
 {
   "textures": {
-    "particle": "villagersnose:block/villager_crop/head_particles",
+    "particle": "villagersnose:block/villager_crop/particles",
 
     "nose_front": "villagersnose:block/villager_crop/nose/nose_front_or_top",
     "nose_side": "villagersnose:block/villager_crop/nose/nose_side_or_bottom",

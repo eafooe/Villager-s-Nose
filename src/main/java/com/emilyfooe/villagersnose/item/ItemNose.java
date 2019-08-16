@@ -4,22 +4,27 @@ import com.emilyfooe.villagersnose.Configuration;
 import com.emilyfooe.villagersnose.VillagersNose;
 import com.emilyfooe.villagersnose.client.model.ModelNose;
 import com.emilyfooe.villagersnose.init.ModBlocks;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
+import net.minecraft.block.*;
 import net.minecraft.client.renderer.FaceDirection;
 import net.minecraft.client.renderer.entity.model.BipedModel;
+import net.minecraft.dispenser.DefaultDispenseItemBehavior;
+import net.minecraft.dispenser.IBlockSource;
+import net.minecraft.dispenser.IDispenseItemBehavior;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.*;
 import net.minecraft.util.*;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.common.PlantType;
 import net.minecraftforge.common.extensions.IForgeBlockState;
@@ -128,4 +133,6 @@ public class ItemNose extends ArmorItem implements IForgeItem, IPlantable {
             return ActionResultType.FAIL;
         }
     }
+
+
 }
