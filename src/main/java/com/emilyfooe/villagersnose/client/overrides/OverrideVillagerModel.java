@@ -1,6 +1,5 @@
 package com.emilyfooe.villagersnose.client.overrides;
 
-import com.emilyfooe.villagersnose.VillagersNose;
 import com.emilyfooe.villagersnose.capabilities.Nose.INose;
 import net.minecraft.client.renderer.entity.model.EntityModel;
 import net.minecraft.client.renderer.entity.model.IHasHead;
@@ -14,21 +13,17 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 import static com.emilyfooe.villagersnose.capabilities.Nose.NoseProvider.NOSE_CAP;
 
+// Pretty much a copy-paste job except for render method
 @OnlyIn(Dist.CLIENT)
 public class OverrideVillagerModel<T extends Entity> extends EntityModel<T> implements IHasHead, IHeadToggle {
     private final RendererModel villagerHead;
     private RendererModel villagerHeadwear;
     private final RendererModel villagerHeadwearAccessory;
     private final RendererModel villagerBody;
-    private final RendererModel villagerBodyAccessory;
     private final RendererModel villagerArms;
     private final RendererModel rightVillagerLeg;
     private final RendererModel leftVillagerLeg;
     private final RendererModel villagerNose;
-
-    /*public OverrideVillagerModel(){
-        this(0.0F);
-    }*/
 
     OverrideVillagerModel(float scale) {
         this(scale, 64, 64);
@@ -55,7 +50,7 @@ public class OverrideVillagerModel<T extends Entity> extends EntityModel<T> impl
         villagerBody = (new RendererModel(this)).setTextureSize(p_i51059_2_, p_i51059_3_);
         villagerBody.setRotationPoint(0.0F, 0.0F, 0.0F);
         villagerBody.setTextureOffset(16, 20).addBox(-4.0F, 0.0F, -3.0F, 8, 12, 6, p_i51059_1_);
-        villagerBodyAccessory = (new RendererModel(this)).setTextureSize(p_i51059_2_, p_i51059_3_);
+        RendererModel villagerBodyAccessory = (new RendererModel(this)).setTextureSize(p_i51059_2_, p_i51059_3_);
         villagerBodyAccessory.setRotationPoint(0.0F, 0.0F, 0.0F);
         villagerBodyAccessory.setTextureOffset(0, 38).addBox(-4.0F, 0.0F, -3.0F, 8, 18, 6, p_i51059_1_ + 0.5F);
         villagerBody.addChild(villagerBodyAccessory);
@@ -76,21 +71,17 @@ public class OverrideVillagerModel<T extends Entity> extends EntityModel<T> impl
     public void render(T entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
         this.setRotationAngles(entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
 
+        // Determine whether the villager should render with or without a nose
         if (entityIn.getCapability(NOSE_CAP).isPresent()) {
-            // VillagersNose.LOGGER.info("Found nose capability");
             INose noseCap = entityIn.getCapability(NOSE_CAP).orElseThrow(() -> new RuntimeException("New runtime exception"));
             // Add a nose to a villager w/o a nose
             if (noseCap.hasNose() && !villagerHead.childModels.contains(villagerNose)) {
-                //VillagersNose.LOGGER.info("Adding nose...");
                 villagerHead.addChild(villagerNose);
             }
             // Remove a nose from a villager w/ a nose
             else if (!noseCap.hasNose() && villagerHead.childModels.contains(villagerNose)) {
-               // VillagersNose.LOGGER.info("Removing nose...");
                 villagerHead.removeChild(villagerNose);
             }
-        } else {
-            VillagersNose.LOGGER.info("Could not find nose capability");
         }
 
         villagerHead.render(scale);
@@ -124,6 +115,7 @@ public class OverrideVillagerModel<T extends Entity> extends EntityModel<T> impl
         leftVillagerLeg.rotateAngleY = 0.0F;
     }
 
+    @SuppressWarnings("NullableProblems")
     public RendererModel func_205072_a() {
         return villagerHead;
     }

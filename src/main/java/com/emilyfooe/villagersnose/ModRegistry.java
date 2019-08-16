@@ -14,6 +14,8 @@ import static com.emilyfooe.villagersnose.VillagersNose.MODID;
 @ObjectHolder(MODID)
 @Mod.EventBusSubscriber(modid = MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ModRegistry {
+
+    // Register all of the blocks in ModBlocks
     @SubscribeEvent
     public static void blockRegistry(RegistryEvent.Register<Block> event){
         for (Block block : ModBlocks.blocks){
@@ -28,6 +30,4 @@ public class ModRegistry {
             event.getRegistry().register(item);
         }
     }
-
-
 }

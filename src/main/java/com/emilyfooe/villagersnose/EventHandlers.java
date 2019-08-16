@@ -15,7 +15,9 @@ import net.minecraft.item.Items;
 import net.minecraft.item.ShearsItem;
 import net.minecraft.stats.Stats;
 import net.minecraft.util.Hand;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.World;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
@@ -32,7 +34,7 @@ public class EventHandlers {
     private static int regrowthTime = Configuration.COMMON.regrowthTime.get() * ticksPerSecond;
     private static boolean noseRegenerates = Configuration.COMMON.noseRegenerates.get();
 
-    // Add a nose and timer capability to villager entities
+    // Add a nose and timer capability to instances of VillagerEntity
     @SubscribeEvent
     public static void attachEntityCapabilities(AttachCapabilitiesEvent<Entity> event) {
         if (event.getObject() instanceof VillagerEntity) {
@@ -41,6 +43,7 @@ public class EventHandlers {
         }
     }
 
+    // If the player reduces the nose regrowth time in the config file, update these changes
     @SubscribeEvent
     public static void entityJoinWorld(EntityJoinWorldEvent event){
         if (event.getEntity() instanceof VillagerEntity){
@@ -48,6 +51,19 @@ public class EventHandlers {
             if (timerCap.getTimer() > regrowthTime){
                 timerCap.setTimer(regrowthTime);
             }
+        }
+    }
+
+    // When a new client starts viewing the entity, notify it of existing data
+    @SubscribeEvent
+    public static void onStartTracking(PlayerEvent.StartTracking event) {
+        PlayerEntity player = event.getEntityPlayer();
+        Entity target = event.getTarget();
+        if (player instanceof ServerPlayerEntity && target instanceof VillagerEntity) {
+            PacketDistributor.PacketTarget dest = PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) player);
+            boolean hasNose = target.getCapability(NOSE_CAP).orElseThrow(NullPointerException::new).hasNose();
+            int entityId = target.getEntityId();
+            PacketHandler.INSTANCE.send(dest, new ClientPacket(entityId, hasNose));
         }
     }
 
@@ -70,19 +86,6 @@ public class EventHandlers {
         }
     }
 
-    // When a new client starts viewing the entity, notify it of existing data
-    @SubscribeEvent
-    public static void onStartTracking(PlayerEvent.StartTracking event) {
-        PlayerEntity player = event.getEntityPlayer();
-        Entity target = event.getTarget();
-        if (player instanceof ServerPlayerEntity && target instanceof VillagerEntity) {
-            PacketDistributor.PacketTarget dest = PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) player);
-            boolean hasNose = target.getCapability(NOSE_CAP).orElseThrow(NullPointerException::new).hasNose();
-            int entityId = target.getEntityId();
-            PacketHandler.INSTANCE.send(dest, new ClientPacket(entityId, hasNose));
-        }
-    }
-
     // If a player entity right-clicks a villager entity with a nose while holding shears, remove the villager's nose
     // Drop the nose as an item, damage the shears, and set a timer so the nose regrows after a set time
     @SubscribeEvent
@@ -95,6 +98,7 @@ public class EventHandlers {
                     INose capability = villager.getCapability(NOSE_CAP).orElseThrow(NullPointerException::new);
                     if (capability.hasNose() && player.getHeldItemMainhand().getItem() instanceof ShearsItem) {
                         capability.setHasNose(false);
+                        event.getTarget().playSound(SoundEvents.ENTITY_SHEEP_SHEAR, 1.0F, 1.0F);
                         ITimer timerCap = villager.getCapability(TIMER_CAP).orElseThrow(NullPointerException::new);
                         timerCap.setTimer(regrowthTime);
                         VillagersNose.LOGGER.info("Set regrowthTime to " + regrowthTime + " ticks");
@@ -118,4 +122,6 @@ public class EventHandlers {
             }
         }
     }
+
+
 }

@@ -1,6 +1,5 @@
 package com.emilyfooe.villagersnose.capabilities.Nose;
 
-import com.emilyfooe.villagersnose.VillagersNose;
 import net.minecraft.nbt.INBT;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
@@ -25,13 +24,11 @@ public class NoseProvider implements ICapabilitySerializable<INBT> {
 
     @Override
     public INBT serializeNBT() {
-        VillagersNose.LOGGER.info("Serializing NBT...");
         return NOSE_CAP.getStorage().writeNBT(NOSE_CAP, instance, null);
     }
 
     @Override
     public void deserializeNBT(INBT nbt) {
-        VillagersNose.LOGGER.info("Deserializing NBT...");
         NOSE_CAP.getStorage().readNBT(NOSE_CAP, instance, null, nbt);
     }
 

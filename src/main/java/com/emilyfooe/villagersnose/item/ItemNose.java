@@ -42,6 +42,7 @@ public class ItemNose extends ArmorItem implements IForgeItem, IPlantable {
         super(ArmorMaterial.LEATHER, EquipmentSlotType.HEAD, new Item.Properties().maxStackSize(64).rarity(Rarity.COMMON).group(ItemGroup.COMBAT));
     }
 
+    // Determines whether emerald ore is within range of the player
     public static boolean emeraldsAreNearby(World world, int posX, int posY, int posZ) {
         int range = Configuration.COMMON.searchRange.get();
         int minX = posX - range;
@@ -64,6 +65,7 @@ public class ItemNose extends ArmorItem implements IForgeItem, IPlantable {
         return false;
     }
 
+    // Checks if emerald ore is nearby every tick. If so, play random villager sounds
     @Override
     public void onArmorTick(ItemStack itemStack, World world, PlayerEntity playerEntity) {
         if (playerEntity.ticksExisted % 20 == 0) {
@@ -91,6 +93,7 @@ public class ItemNose extends ArmorItem implements IForgeItem, IPlantable {
         return "villagersnose:textures/models/armor/item_nose.png";
     }
 
+    // List of villager sounds to play while near emeralds
     private static List<SoundEvent> createVillagerSoundsList() {
         List<SoundEvent> list = new LinkedList<>();
         list.add(SoundEvents.ENTITY_VILLAGER_NO);
@@ -100,6 +103,7 @@ public class ItemNose extends ArmorItem implements IForgeItem, IPlantable {
         return list;
     }
 
+    // Picks a random villager sound to play
     private static SoundEvent getRandomVillagerSound() {
         return villagerSounds.get(new Random().nextInt(villagerSounds.size()));
     }
@@ -114,6 +118,7 @@ public class ItemNose extends ArmorItem implements IForgeItem, IPlantable {
         return PlantType.Crop;
     }
 
+    // If the player right-clicks with the block on Farmland, plant a villager crop
     @Override
     public ActionResultType onItemUseFirst(ItemStack stack, ItemUseContext context) {
         BlockState state = context.getWorld().getBlockState(context.getPos());
@@ -127,7 +132,6 @@ public class ItemNose extends ArmorItem implements IForgeItem, IPlantable {
             if (!context.getPlayer().isCreative()){
                 stack.shrink(1);
             }
-
             return ActionResultType.SUCCESS;
         } else {
             return ActionResultType.FAIL;

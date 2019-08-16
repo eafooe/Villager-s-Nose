@@ -10,6 +10,7 @@ import java.util.List;
 
 import static com.emilyfooe.villagersnose.VillagersNose.MODID;
 
+// Initializes all blocks and adds them to a list
 public class ModBlocks {
     public static List<Block> blocks = new LinkedList<>();
     public static CropsBlock VILLAGER_CROP = (CropsBlock) createVillagerCropBlock("block_villager_crop");

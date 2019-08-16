@@ -10,6 +10,7 @@ import java.util.List;
 
 import static com.emilyfooe.villagersnose.VillagersNose.MODID;
 
+// Initializes all items and adds them to a list
 public class ModItems {
     public static List<Item> items = new LinkedList<>();
     public static Item ITEM_NOSE = (ArmorItem) createItem("item_nose");

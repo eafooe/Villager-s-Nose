@@ -47,6 +47,5 @@ public class VillagersNose {
         IReloadableResourceManager resourceManager = (IReloadableResourceManager) mc.getResourceManager();
         EntityRendererManager re = mc.getRenderManager();
         re.register(VillagerEntity.class, new OverrideVillagerRenderer(re, resourceManager));
-        LOGGER.info("Client method registered");
     }
 }

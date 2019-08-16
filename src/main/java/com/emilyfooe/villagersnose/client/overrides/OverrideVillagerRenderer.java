@@ -13,6 +13,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nonnull;
 
+// Pretty much a copy-paste job
 @OnlyIn(Dist.CLIENT)
 public class OverrideVillagerRenderer extends MobRenderer<VillagerEntity, OverrideVillagerModel<VillagerEntity>> {
     private static final ResourceLocation field_217779_a = new ResourceLocation("textures/entity/villager/villager.png");

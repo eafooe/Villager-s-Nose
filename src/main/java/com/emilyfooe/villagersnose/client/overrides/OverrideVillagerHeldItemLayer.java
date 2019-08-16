@@ -15,6 +15,7 @@ import net.minecraft.util.BlockRenderLayer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+// Pretty much a copy-paste job
 @OnlyIn(Dist.CLIENT)
 public class OverrideVillagerHeldItemLayer<T extends LivingEntity> extends LayerRenderer<T, OverrideVillagerModel<T>> {
     private final ItemRenderer field_215347_a = Minecraft.getInstance().getItemRenderer();
