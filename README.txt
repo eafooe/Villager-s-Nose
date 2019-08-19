@@ -4,7 +4,7 @@ Villager's Nose
 Villager's Nose is a small, joke mod where players can cut off villagers' noses. It requires Forge to run.
 
 This mod is a slightly-tweaked update of StarSheep's original Villager's Nose mod, which runs on Minecraft 1.7.
-The original version can be found here: curseforge.com/minecraft/mc-mods/villagers-nose
+The original version can be found here: https://www.curseforge.com/minecraft/mc-mods/villagers-nose
 
 
 Features
