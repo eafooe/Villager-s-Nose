@@ -24,7 +24,7 @@ displayName="Villager's Nose" #mandatory
 # A file name (in the root of the mod JAR) containing a logo for display
 logoFile="logo.png" #optional
 # A text field displayed in the mod UI
-credits="Thanks for this example mod goes to Java" #optional
+credits="Based on StarSheep's Villager's Nose mod (curseforge.com/minecraft/mc-mods/villagers-nose)" #optional
 # A text field displayed in the mod UI
 authors="Emily Fooe" #optional
 # The description text for the mod (multi line!) (#mandatory)
@@ -51,6 +51,6 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed mollis lacinia magn
 [[dependencies.villagersnose]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.14.3]"
+    versionRange="[1.14.0, 1.14.4)"
     ordering="NONE"
     side="BOTH"

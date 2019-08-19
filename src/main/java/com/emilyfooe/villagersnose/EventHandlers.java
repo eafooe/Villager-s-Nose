@@ -75,7 +75,6 @@ public class EventHandlers {
                 ITimer timerCap = event.getEntityLiving().getCapability(TIMER_CAP).orElseThrow(NullPointerException::new);
                 if (timerCap.getTimer() > 0) {
                     timerCap.decrementTimer();
-                    VillagersNose.LOGGER.info("Time left: " + timerCap.getTimer());
                 } else {
                     noseCap.setHasNose(true);
                     PacketDistributor.PacketTarget dest = PacketDistributor.TRACKING_ENTITY.with(event::getEntityLiving);
@@ -101,7 +100,6 @@ public class EventHandlers {
                         event.getTarget().playSound(SoundEvents.ENTITY_SHEEP_SHEAR, 1.0F, 1.0F);
                         ITimer timerCap = villager.getCapability(TIMER_CAP).orElseThrow(NullPointerException::new);
                         timerCap.setTimer(regrowthTime);
-                        VillagersNose.LOGGER.info("Set regrowthTime to " + regrowthTime + " ticks");
                         PacketDistributor.PacketTarget dest = PacketDistributor.TRACKING_ENTITY.with(event::getTarget);
                         PacketHandler.INSTANCE.send(dest, new ClientPacket(villager.getEntityId(), false));
                         player.getHeldItemMainhand().damageItem(1, player, (exp) -> exp.sendBreakAnimation(event.getHand()));
@@ -122,6 +120,4 @@ public class EventHandlers {
             }
         }
     }
-
-
 }
