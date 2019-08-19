@@ -15,4 +15,4 @@ Features
 - Equip a villager's nose to the player's head slot to detect nearby emerald ore
    - When near emerald ore, the nose will wiggle and play villager sounds
    - The emerald ore search range can be set in the configuration
-- Plant a villager's nose in tilled soil (farmland) to grow a villager
+- Plant a villager's nose in tilled soil to grow a villager
