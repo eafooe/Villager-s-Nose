@@ -45,6 +45,6 @@ The original version can be found here: curseforge.com/minecraft/mc-mods/village
 [[dependencies.villagersnose]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.14.0, 1.14.4)"
+    versionRange="[1.14.0, 1.14.5)"
     ordering="NONE"
     side="BOTH"

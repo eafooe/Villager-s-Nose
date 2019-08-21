@@ -84,7 +84,6 @@ public class ItemNose extends ArmorItem implements IForgeItem, IPlantable {
     @Nullable
     @Override
     public <A extends BipedModel<?>> A getArmorModel(LivingEntity entityLiving, ItemStack itemStack, EquipmentSlotType armorSlot, A defaultModel) {
-        VillagersNose.LOGGER.info("getArmorModel fired");
         return (A) new ModelNose();
     }
 
