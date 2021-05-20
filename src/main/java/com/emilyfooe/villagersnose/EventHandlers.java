@@ -16,8 +16,8 @@ import net.minecraft.item.ShearsItem;
 import net.minecraft.stats.Stats;
 import net.minecraft.util.Hand;
 import net.minecraft.util.SoundEvents;
+import net.minecraft.util.Util;
 import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
@@ -57,19 +57,19 @@ public class EventHandlers {
     // When a new client starts viewing the entity, notify it of existing data
     @SubscribeEvent
     public static void onStartTracking(PlayerEvent.StartTracking event) {
-        PlayerEntity player = event.getEntityPlayer();
+        PlayerEntity player = event.getPlayer();
         Entity target = event.getTarget();
         if (player instanceof ServerPlayerEntity && target instanceof VillagerEntity) {
             PacketDistributor.PacketTarget dest = PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) player);
             boolean hasNose = target.getCapability(NOSE_CAP).orElseThrow(NullPointerException::new).hasNose();
-            int entityId = target.getEntityId();
+            int entityId = target.getId();
             PacketHandler.INSTANCE.send(dest, new ClientPacket(entityId, hasNose));
         }
     }
 
     @SubscribeEvent
     public static void onLivingUpdateEvent(LivingEvent.LivingUpdateEvent event) {
-        if (!event.getEntityLiving().world.isRemote && event.getEntityLiving() instanceof VillagerEntity && noseRegenerates) {
+        if (!event.getEntityLiving().getCommandSenderWorld().isClientSide && event.getEntityLiving() instanceof VillagerEntity && noseRegenerates) {
             INose noseCap = event.getEntityLiving().getCapability(NOSE_CAP).orElseThrow(NullPointerException::new);
             if (!noseCap.hasNose()) {
                 ITimer timerCap = event.getEntityLiving().getCapability(TIMER_CAP).orElseThrow(NullPointerException::new);
@@ -78,40 +78,53 @@ public class EventHandlers {
                 } else {
                     noseCap.setHasNose(true);
                     PacketDistributor.PacketTarget dest = PacketDistributor.TRACKING_ENTITY.with(event::getEntityLiving);
-                    int entityId = event.getEntityLiving().getEntityId();
+                    int entityId = event.getEntityLiving().getId();
                     PacketHandler.INSTANCE.send(dest, new ClientPacket(entityId, true));
                 }
             }
         }
     }
 
+
+
+
+
+
     // If a player entity right-clicks a villager entity with a nose while holding shears, remove the villager's nose
     // Drop the nose as an item, damage the shears, and set a timer so the nose regrows after a set time
     @SubscribeEvent
     public static void shearNoseEvent(PlayerInteractEvent.EntityInteract event) {
-        if (event.getEntityPlayer() instanceof ServerPlayerEntity && event.getHand() == Hand.MAIN_HAND) {
-            ServerPlayerEntity player = (ServerPlayerEntity) event.getEntityPlayer();
+        if (event.getPlayer() instanceof ServerPlayerEntity && event.getHand() == Hand.MAIN_HAND) {
+            ServerPlayerEntity player = (ServerPlayerEntity) event.getPlayer();
             if (event.getTarget() instanceof VillagerEntity) {
                 VillagerEntity villager = (VillagerEntity) event.getTarget();
                 if (event.getTarget().getCapability(NOSE_CAP).isPresent()) {
                     INose capability = villager.getCapability(NOSE_CAP).orElseThrow(NullPointerException::new);
-                    if (capability.hasNose() && player.getHeldItemMainhand().getItem() instanceof ShearsItem) {
+                    if (capability.hasNose() && player.getItemInHand(Hand.MAIN_HAND).getItem() instanceof ShearsItem) {
                         capability.setHasNose(false);
-                        event.getTarget().playSound(SoundEvents.ENTITY_SHEEP_SHEAR, 1.0F, 1.0F);
+                        event.getTarget().playSound(SoundEvents.SHEEP_SHEAR, 1.0F, 1.0F);
                         ITimer timerCap = villager.getCapability(TIMER_CAP).orElseThrow(NullPointerException::new);
                         timerCap.setTimer(regrowthTime);
                         PacketDistributor.PacketTarget dest = PacketDistributor.TRACKING_ENTITY.with(event::getTarget);
-                        PacketHandler.INSTANCE.send(dest, new ClientPacket(villager.getEntityId(), false));
-                        player.getHeldItemMainhand().damageItem(1, player, (exp) -> exp.sendBreakAnimation(event.getHand()));
-                        villager.entityDropItem(ModItems.ITEM_NOSE);
+                        PacketHandler.INSTANCE.send(dest, new ClientPacket(villager.getId(), false));
+
+
+                        player.getItemInHand(Hand.MAIN_HAND).hurtAndBreak(1, player, (exp) -> {
+                            exp.broadcastBreakEvent(event.getHand());
+                        });
+                        villager.spawnAtLocation(ModItems.ITEM_NOSE);
+
                         event.setCanceled(true);
                         return;
                     }
                     if (!capability.hasNose()) {
-                        if (event.getItemStack().getItem() != Items.VILLAGER_SPAWN_EGG && villager.isAlive() && !villager.isSleeping() && !player.isSneaking() && !villager.isChild()) {
-                            player.addStat(Stats.TALKED_TO_VILLAGER);
+                        if (event.getItemStack().getItem() != Items.VILLAGER_SPAWN_EGG && villager.isAlive() && !villager.isSleeping() && !player.isCrouching() && !villager.isBaby()) {
+                            player.awardStat(Stats.TALKED_TO_VILLAGER);
                             if (!villager.getOffers().isEmpty()) {
-                                player.sendMessage(new TranslationTextComponent("translation.villagersnose.trade_refusal", (Object) null));
+
+
+                                System.out.println("Sending message....");
+                                player.sendMessage(new TranslationTextComponent("translation.villagersnose.trade_refusal"), Util.NIL_UUID);
                                 event.setCanceled(true);
                             }
                         }

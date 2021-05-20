@@ -1,6 +1,8 @@
 package com.emilyfooe.villagersnose.client.overrides;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.matrix.MatrixStack;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.client.renderer.entity.layers.HeadLayer;
@@ -10,13 +12,19 @@ import net.minecraft.resources.IReloadableResourceManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-
-import javax.annotation.Nonnull;
+import net.minecraftforge.fml.client.registry.IRenderFactory;
 
 // Pretty much a copy-paste job
 @OnlyIn(Dist.CLIENT)
-public class OverrideVillagerRenderer extends MobRenderer<VillagerEntity, OverrideVillagerModel<VillagerEntity>> {
-    private static final ResourceLocation field_217779_a = new ResourceLocation("textures/entity/villager/villager.png");
+public class OverrideVillagerRenderer extends MobRenderer<VillagerEntity, OverrideVillagerModel<VillagerEntity>> implements IRenderFactory<VillagerEntity> {
+
+
+    @Override
+    public EntityRenderer<? super VillagerEntity> createRenderFor(EntityRendererManager manager) {
+        return new OverrideVillagerRenderer(manager, (IReloadableResourceManager) Minecraft.getInstance().getResourceManager());
+    }
+
+    private static final ResourceLocation VILLAGER_BASE_SKIN = new ResourceLocation("textures/entity/villager/villager.png");
 
     public OverrideVillagerRenderer(EntityRendererManager rendererManager, IReloadableResourceManager resourceManager) {
         super(rendererManager, new OverrideVillagerModel<>(0.0F), 0.5F);
@@ -25,21 +33,22 @@ public class OverrideVillagerRenderer extends MobRenderer<VillagerEntity, Overri
         addLayer(new OverrideVillagerHeldItemLayer<>(this));
     }
 
-
-    protected ResourceLocation getEntityTexture(@Nonnull VillagerEntity entity) {
-        return field_217779_a;
-    }
-
-    protected void preRenderCallback(VillagerEntity entitylivingbaseIn, float partialTickTime) {
+    protected void scale(VillagerEntity villagerEntity, MatrixStack stack, float p) {
         float f = 0.9375F;
-        if (entitylivingbaseIn.isChild()) {
+        if (villagerEntity.isBaby()) {
             f = (float) ((double) f * 0.5D);
-            this.shadowSize = 0.25F;
+            this.shadowRadius = 0.25F;
         } else {
-            this.shadowSize = 0.5F;
+            this.shadowRadius = 0.5F;
         }
 
-        GlStateManager.scalef(f, f, f);
+       stack.scale(f, f, f);
     }
+
+    @Override
+    public ResourceLocation getTextureLocation(VillagerEntity p_110775_1_) {
+        return VILLAGER_BASE_SKIN;
+    }
+
 
 }

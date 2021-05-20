@@ -41,7 +41,7 @@ public class ClientPacket {
         ctx.get().enqueueWork(() -> {
             // Get instance of entity in client's world
             ClientPlayerEntity clientPlayer = Minecraft.getInstance().player;
-            Entity entity = clientPlayer.world.getEntityByID(msg.entityId);
+            Entity entity = clientPlayer.clientLevel.getEntity(msg.entityId);
 
             // If the entity can be found, and it has our nose capability, set the value of 'hasNose'
             if (entity != null && entity.getCapability(NOSE_CAP).isPresent()){
