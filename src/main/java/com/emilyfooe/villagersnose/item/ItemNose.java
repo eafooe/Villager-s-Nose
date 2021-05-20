@@ -31,11 +31,20 @@ import java.util.List;
 import java.util.Random;
 
 public class ItemNose extends ArmorItem implements IForgeItem, IPlantable {
-    private ModelNose<LivingEntity> model;
+
     private static final List<SoundEvent> villagerSounds = createVillagerSoundsList();
 
     public ItemNose() {
         super(ArmorMaterial.LEATHER, EquipmentSlotType.HEAD, new Item.Properties().stacksTo(64).rarity(Rarity.COMMON).tab(ItemGroup.TAB_COMBAT));
+    }
+
+
+    public ItemNose(IArmorMaterial armorMaterial){
+        super(armorMaterial, EquipmentSlotType.HEAD, new Item.Properties().stacksTo(64).rarity(Rarity.COMMON).tab(ItemGroup.TAB_COMBAT));
+    }
+
+    public static boolean emeraldsAreNearby(World world, double posX, double posY, double posZ) {
+        return emeraldsAreNearby(world, (int) posX, (int) posY, (int) posZ);
     }
 
     // Determines whether emerald ore is within range of the player
@@ -71,26 +80,16 @@ public class ItemNose extends ArmorItem implements IForgeItem, IPlantable {
             if (emeraldsAreNearby(world, posX, posY, posZ)) {
                 Random rand = new Random();
                 playerEntity.playSound(getRandomVillagerSound(), 1.0F, (rand.nextFloat() - rand.nextFloat()) * 0.2F + 1.0F);
-                wiggle(playerEntity.tickCount);
-            }
-        }
-    }
 
-    @OnlyIn(Dist.CLIENT)
-    private void wiggle(int tickCount){
-        if (model != null){
-            model.wiggle(tickCount);
+            }
         }
     }
 
     @SuppressWarnings("unchecked")
     @OnlyIn(Dist.CLIENT)
     public <A extends BipedModel<?>> A getArmorModel(LivingEntity entityLiving, ItemStack itemStack, EquipmentSlotType armorSlot, A defaultModel) {
-        if (model == null){
-            model = new ModelNose<LivingEntity>();
-            return (A) model;
-        }
-        return (A) model;
+        ModelNose.INSTANCE.rotate(entityLiving, itemStack);
+        return (A) ModelNose.INSTANCE;
     }
 
     @Override
