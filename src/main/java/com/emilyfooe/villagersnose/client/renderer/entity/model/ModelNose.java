@@ -12,12 +12,12 @@ import net.minecraft.util.math.MathHelper;
 
 public class ModelNose extends BipedModel<LivingEntity> {
     public static final ModelNose INSTANCE = new ModelNose();
-    private final ModelRenderer bipedNose;
+    public final ModelRenderer bipedNose;
     public ModelNose() {
         this(0.0F, 0.0F, 8, 6);
     }
 
-    private ModelNose(float scaleFactor, float rotationY, int textureWidth, int textureHeight) {
+    public ModelNose(float scaleFactor, float rotationY, int textureWidth, int textureHeight) {
         super(scaleFactor, rotationY, 0, 0);
         bipedNose = new ModelRenderer(this);
         bipedNose.setTexSize(textureWidth, textureHeight); // image x, image y
@@ -25,9 +25,6 @@ public class ModelNose extends BipedModel<LivingEntity> {
         bipedNose.xRot = 0.0F;
         bipedNose.yRot = 0.0F;
         bipedNose.zRot = 0.0F;
-
-        //head.addChild(bipedNose);
-
     }
 
     @Override

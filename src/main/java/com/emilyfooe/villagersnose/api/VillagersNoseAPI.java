@@ -1,5 +1,6 @@
 package com.emilyfooe.villagersnose.api;
 
+import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.IArmorMaterial;
 import net.minecraft.item.crafting.Ingredient;

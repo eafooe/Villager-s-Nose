@@ -35,12 +35,12 @@ public class ItemNose extends ArmorItem implements IForgeItem, IPlantable {
     private static final List<SoundEvent> villagerSounds = createVillagerSoundsList();
 
     public ItemNose() {
-        super(ArmorMaterial.LEATHER, EquipmentSlotType.HEAD, new Item.Properties().stacksTo(64).rarity(Rarity.COMMON).tab(ItemGroup.TAB_COMBAT));
+        super(ArmorMaterial.LEATHER, EquipmentSlotType.HEAD, new Item.Properties().stacksTo(64).rarity(Rarity.COMMON).tab(ItemGroup.TAB_MISC));
     }
 
 
     public ItemNose(IArmorMaterial armorMaterial){
-        super(armorMaterial, EquipmentSlotType.HEAD, new Item.Properties().stacksTo(64).rarity(Rarity.COMMON).tab(ItemGroup.TAB_COMBAT));
+        super(armorMaterial, EquipmentSlotType.HEAD, new Item.Properties().stacksTo(64).rarity(Rarity.COMMON).tab(ItemGroup.TAB_MISC));
     }
 
     public static boolean emeraldsAreNearby(World world, double posX, double posY, double posZ) {
@@ -94,7 +94,7 @@ public class ItemNose extends ArmorItem implements IForgeItem, IPlantable {
 
     @Override
     public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlotType slot, String type) {
-        return "villagersnose:textures/models/armor/item_nose.png";
+        return "villagersnose:textures/models/armor/nose.png";
     }
 
     // List of villager sounds to play while near emeralds
