@@ -1,5 +1,8 @@
 {
   "item.villagersnose.nose": "Nose",
   "item.villagersnose.witch_nose": "Witch Nose",
+  "item.villagersnose.iron_golem_nose": "Iron Golem Nose",
+  "translation.villagersnose.iron_golem_nose.tooltip": "It's a good source of iron",
   "translation.villagersnose.trade_refusal": "Leave me alone! I miss my nose!"
+
 }

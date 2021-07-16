@@ -1,25 +1,38 @@
 package com.emilyfooe.villagersnose;
 
+import com.emilyfooe.villagersnose.block.BlockVillagerCrop;
 import com.emilyfooe.villagersnose.capabilities.Nose.INose;
 import com.emilyfooe.villagersnose.capabilities.Nose.NoseProvider;
 import com.emilyfooe.villagersnose.capabilities.Timer.ITimer;
 import com.emilyfooe.villagersnose.capabilities.Timer.TimerProvider;
+import com.emilyfooe.villagersnose.client.renderer.entity.model.CustomIronGolemModel;
+import com.emilyfooe.villagersnose.client.renderer.entity.model.CustomZombieVillagerModel;
 import com.emilyfooe.villagersnose.init.ModItems;
 import com.emilyfooe.villagersnose.network.ClientPacket;
 import com.emilyfooe.villagersnose.network.PacketHandler;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.client.renderer.entity.model.EntityModel;
+import net.minecraft.client.renderer.entity.model.IllagerModel;
+import net.minecraft.client.renderer.entity.model.VillagerModel;
+import net.minecraft.entity.AgeableEntity;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.entity.merchant.villager.WanderingTraderEntity;
-import net.minecraft.entity.monster.WitchEntity;
+import net.minecraft.entity.monster.*;
+import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.Items;
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.ShearsItem;
+import net.minecraft.item.SpawnEggItem;
 import net.minecraft.stats.Stats;
 import net.minecraft.util.Hand;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.Util;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
@@ -35,29 +48,56 @@ import static com.emilyfooe.villagersnose.capabilities.Nose.NoseProvider.NOSE_CA
 import static com.emilyfooe.villagersnose.capabilities.Timer.TimerProvider.TIMER_CAP;
 
 public class EventHandlers {
-    private static int ticksPerSecond = 20;
-    private static int regrowthTime = Configuration.COMMON.regrowthTime.get() * ticksPerSecond;
-    private static boolean noseRegenerates = Configuration.COMMON.noseRegenerates.get();
+    private static final int ticksPerSecond = 20;
+    private static final int regrowthTime = Configuration.COMMON.regrowthTime.get() * ticksPerSecond;
+    private static final boolean noseRegenerates = Configuration.COMMON.noseRegenerates.get();
     private static final List shearable = Arrays.asList(WitchEntity.class, VillagerEntity.class, WanderingTraderEntity.class);
+    private static final List irregularShearable = Arrays.asList(ZombieVillagerEntity.class, EvokerEntity.class,
+            PillagerEntity.class, VindicatorEntity.class, IllusionerEntity.class, IronGolemEntity.class);
 
     // Add a nose and timer capability to nose-shearable instances
     @SubscribeEvent
     public static void attachEntityCapabilities(AttachCapabilitiesEvent<Entity> event) {
-        if (shearable.contains(event.getObject().getClass())){
+        if (entityTypeIsShearable(event.getObject())) {
             event.addCapability(NoseProvider.IDENTIFIER, new NoseProvider());
             event.addCapability(TimerProvider.IDENTIFIER, new TimerProvider());
         }
     }
 
-    private static boolean entityTypeIsShearable(Entity entity){
-        return shearable.contains(entity.getClass());
+    private static boolean entityTypeIsShearable(Entity entity) {
+        return shearable.contains(entity.getClass()) || irregularShearable.contains(entity.getClass());
     }
+
+    private static boolean isHoldingShears(PlayerEntity player) {
+        return player.getItemInHand(Hand.MAIN_HAND).getItem() instanceof ShearsItem;
+    }
+
+    private static boolean isValidInteraction(Entity target, PlayerEntity player, ItemStack itemStack) {
+        if (!(entityTypeIsShearable(target))) {
+            return false;
+        }
+        if (itemStack.getItem() instanceof SpawnEggItem) {
+            return false;
+        }
+        if (!target.isAlive()) {
+            return false;
+        }
+        if (player.isCrouching()) {
+            return false;
+        }
+        if (target instanceof AgeableEntity) {
+            return !((AgeableEntity) target).isBaby();
+        }
+        return true;
+    }
+
+
     // If the player reduces the nose regrowth time in the config file, update these changes
     @SubscribeEvent
-    public static void entityJoinWorld(EntityJoinWorldEvent event){
-        if (entityTypeIsShearable(event.getEntity())){
+    public static void entityJoinWorld(EntityJoinWorldEvent event) {
+        if (entityTypeIsShearable(event.getEntity())) {
             ITimer timerCap = event.getEntity().getCapability(TIMER_CAP).orElseThrow(NullPointerException::new);
-            if (timerCap.getTimer() > regrowthTime){
+            if (timerCap.getTimer() > regrowthTime) {
                 timerCap.setTimer(regrowthTime);
             }
         }
@@ -74,17 +114,60 @@ public class EventHandlers {
             int entityId = target.getId();
             PacketHandler.INSTANCE.send(dest, new ClientPacket(entityId, hasNose));
         }
+    }
 
+
+    private static void toggleNoseVisibility(Entity entity, EntityModel entityModel, boolean isVisible) {
+        if (!(entityTypeIsShearable(entity))) {
+            return;
+        }
+        if (entity instanceof ZombieVillagerEntity) {
+            CustomZombieVillagerModel model = (CustomZombieVillagerModel) entityModel;
+            model.nose.visible = isVisible;
+        } else if (entity instanceof EvokerEntity || entity instanceof IllusionerEntity || entity instanceof PillagerEntity || entity instanceof VindicatorEntity) {
+            IllagerModel model = (IllagerModel) entityModel;
+            model.head.children.get(1).visible = isVisible;
+        } else if (entity instanceof IronGolemEntity) {
+            CustomIronGolemModel model = (CustomIronGolemModel) entityModel;
+            model.nose.visible = isVisible;
+        } else { // Witches, Villagers, and WanderingTrader entities use VillagerModel
+            VillagerModel villagerModel = (VillagerModel) entityModel;
+            villagerModel.nose.visible = isVisible;
+        }
 
     }
 
+    /***
+     * This should only be executed on the logical client
+     */
     @SubscribeEvent
-    public static void onLivingUpdateEvent(LivingEvent.LivingUpdateEvent event) {
-        if (event.getEntityLiving().getCommandSenderWorld().isClientSide){
+    public static void handleNoseVisibility(RenderLivingEvent.Pre event) {
+        if (!(entityTypeIsShearable(event.getEntity()))) {
             return;
         }
-        if (entityTypeIsShearable(event.getEntityLiving()) && noseRegenerates) {
-            INose noseCap = event.getEntityLiving().getCapability(NOSE_CAP).orElseThrow(NullPointerException::new);
+        Entity shearableEntity = event.getEntity();
+        toggleNoseVisibility(shearableEntity, event.getRenderer().getModel(), hasNose(shearableEntity));
+    }
+
+    /***
+     * This should only be executed on the logical server.
+     *
+     * If a nose-shearable entity does <i>not</i> have a nose and noses should regenerate (set in the mod config),
+     * count down the time until the entity's nose should regrow. Once this time requirement has been hit,
+     * regrow the entity's nose.
+     *
+     */
+    @SubscribeEvent
+    public static void onLivingUpdateEvent(LivingEvent.LivingUpdateEvent event) {
+        if (event.getEntityLiving().getCommandSenderWorld().isClientSide) {
+            return;
+        }
+        if (!(entityTypeIsShearable(event.getEntityLiving())) || !noseRegenerates) {
+            return;
+        }
+        LivingEntity target = event.getEntityLiving();
+        if (target.getCapability(NOSE_CAP).isPresent() && target.getCapability(TIMER_CAP).isPresent()) {
+            INose noseCap = target.getCapability(NOSE_CAP).orElseThrow(NullPointerException::new);
             if (!noseCap.hasNose()) {
                 ITimer timerCap = event.getEntityLiving().getCapability(TIMER_CAP).orElseThrow(NullPointerException::new);
                 if (timerCap.getTimer() > 0) {
@@ -99,82 +182,77 @@ public class EventHandlers {
         }
     }
 
-
-
-@SubscribeEvent
-public static void shearWitchNoseEvent(PlayerInteractEvent.EntityInteractSpecific event){
-        if (!(event.getTarget() instanceof WitchEntity)){
+    @SubscribeEvent
+    public static void rightClickToHarvest(PlayerInteractEvent.RightClickBlock event) {
+        if (event.getWorld().isClientSide) {
             return;
         }
-    if (!(event.getPlayer() instanceof ServerPlayerEntity && event.getHand() == Hand.MAIN_HAND)) {
-        return;
+
+        BlockState blockState = event.getWorld().getBlockState(event.getPos());
+        Block clickedBlock = event.getWorld().getBlockState(event.getPos()).getBlock();
+        if (clickedBlock instanceof BlockVillagerCrop && ((BlockVillagerCrop) clickedBlock).isMaxAge(blockState)) {
+            VillagersNose.LOGGER.info("Interacted w/ villager crop");
+            BlockVillagerCrop villagerCrop = (BlockVillagerCrop) event.getWorld().getBlockState(event.getPos()).getBlock();
+            villagerCrop.destroy(event.getWorld(), event.getPos(), event.getWorld().getBlockState(event.getPos()));
+            event.getWorld().destroyBlock(event.getPos(), false);
+        }
     }
 
 
-        WitchEntity witch = (WitchEntity) event.getTarget();
-        if (!witch.getCapability(NOSE_CAP).isPresent()){
+    private static boolean hasNose(Entity entity) {
+        if (!entity.getCapability(NOSE_CAP).isPresent()) {
+            return false;
+        }
+        return entity.getCapability(NOSE_CAP).orElseThrow(NullPointerException::new).hasNose();
+    }
+
+    private static void spawnNoseItem(Entity entity) {
+        if (entity instanceof IronGolemEntity) {
+            entity.spawnAtLocation(ModItems.ITEM_IRON_GOLEM_NOSE);
             return;
         }
-        INose capability = witch.getCapability(NOSE_CAP).orElseThrow(NullPointerException::new);
-        if (capability.hasNose() && isHoldingShears(event.getPlayer())){
-            capability.setHasNose(false);
-            event.getTarget().playSound(SoundEvents.SHEEP_SHEAR, 1.0F, 1.0F);
-            ITimer timerCap = witch.getCapability(TIMER_CAP).orElseThrow(NullPointerException::new);
-            timerCap.setTimer(regrowthTime);
-            PacketDistributor.PacketTarget dest = PacketDistributor.TRACKING_ENTITY.with(event::getTarget);
-            PacketHandler.INSTANCE.send(dest, new ClientPacket(witch.getId(), false));
-
-            event.getPlayer().getItemInHand(Hand.MAIN_HAND).hurtAndBreak(1, event.getPlayer(), (exp) -> {
-                exp.broadcastBreakEvent(event.getHand());
-            });
-            witch.spawnAtLocation(ModItems.ITEM_WITCH_NOSE);
-
-
-            event.setCanceled(true);
+        if (entity instanceof WitchEntity){
+            entity.spawnAtLocation(ModItems.ITEM_WITCH_NOSE);
+            return;
         }
-}
-
-private static boolean isHoldingShears(PlayerEntity player){
-        return player.getItemInHand(Hand.MAIN_HAND).getItem() instanceof ShearsItem;
-
-}
-
+        entity.spawnAtLocation(ModItems.ITEM_NOSE);
+    }
 
     // If a player entity right-clicks a villager entity with a nose while holding shears, remove the villager's nose
     // Drop the nose as an item, damage the shears, and set a timer so the nose regrows after a set time
     @SubscribeEvent
     public static void shearNoseEvent(PlayerInteractEvent.EntityInteract event) {
-        if (event.getPlayer() instanceof ServerPlayerEntity && event.getHand() == Hand.MAIN_HAND) {
-            ServerPlayerEntity player = (ServerPlayerEntity) event.getPlayer();
-            if (event.getTarget() instanceof VillagerEntity) {
-                VillagerEntity villager = (VillagerEntity) event.getTarget();
-                if (event.getTarget().getCapability(NOSE_CAP).isPresent()) {
-                    INose capability = villager.getCapability(NOSE_CAP).orElseThrow(NullPointerException::new);
-                    if (capability.hasNose() && player.getItemInHand(Hand.MAIN_HAND).getItem() instanceof ShearsItem) {
-                        capability.setHasNose(false);
-                        event.getTarget().playSound(SoundEvents.SHEEP_SHEAR, 1.0F, 1.0F);
-                        ITimer timerCap = villager.getCapability(TIMER_CAP).orElseThrow(NullPointerException::new);
-                        timerCap.setTimer(regrowthTime);
-                        PacketDistributor.PacketTarget dest = PacketDistributor.TRACKING_ENTITY.with(event::getTarget);
-                        PacketHandler.INSTANCE.send(dest, new ClientPacket(villager.getId(), false));
+        if (!(event.getPlayer() instanceof ServerPlayerEntity)) {
+            return;
+        }
+        if (!(entityTypeIsShearable(event.getTarget()))) {
+            return;
+        }
 
-
-                        player.getItemInHand(Hand.MAIN_HAND).hurtAndBreak(1, player, (exp) -> {
-                            exp.broadcastBreakEvent(event.getHand());
-                        });
-                        villager.spawnAtLocation(ModItems.ITEM_NOSE);
-
+        if (isHoldingShears(event.getPlayer()) && hasNose(event.getTarget())) {
+            Entity target = event.getTarget();
+            if (target.getCapability(NOSE_CAP).isPresent() && target.getCapability(TIMER_CAP).isPresent()) {
+                INose noseCap = target.getCapability(NOSE_CAP).orElseThrow(NullPointerException::new);
+                noseCap.setHasNose(false);
+                event.getTarget().playSound(SoundEvents.SHEEP_SHEAR, 1.0F, 1.0F);
+                ITimer timerCap = target.getCapability(TIMER_CAP).orElseThrow(NullPointerException::new);
+                timerCap.setTimer(regrowthTime);
+                PacketDistributor.PacketTarget dest = PacketDistributor.TRACKING_ENTITY.with(event::getTarget);
+                PacketHandler.INSTANCE.send(dest, new ClientPacket(target.getId(), false));
+                event.getPlayer().getItemInHand(Hand.MAIN_HAND).hurtAndBreak(1, event.getPlayer(), (exp) -> exp.broadcastBreakEvent(event.getHand()));
+                spawnNoseItem(target);
+                event.setCanceled(true);
+                return;
+            }
+        }
+        if (!hasNose(event.getTarget())) {
+            if (isValidInteraction(event.getTarget(), event.getPlayer(), event.getItemStack())) {
+                if (event.getTarget() instanceof VillagerEntity) {
+                    VillagerEntity villager = (VillagerEntity) event.getTarget();
+                    event.getPlayer().awardStat(Stats.TALKED_TO_VILLAGER);
+                    if (!villager.getOffers().isEmpty()) {
+                        event.getPlayer().sendMessage(new TranslationTextComponent("translation.villagersnose.trade_refusal"), Util.NIL_UUID);
                         event.setCanceled(true);
-                        return;
-                    }
-                    if (!capability.hasNose()) {
-                        if (event.getItemStack().getItem() != Items.VILLAGER_SPAWN_EGG && villager.isAlive() && !villager.isSleeping() && !player.isCrouching() && !villager.isBaby()) {
-                            player.awardStat(Stats.TALKED_TO_VILLAGER);
-                            if (!villager.getOffers().isEmpty()) {
-                                player.sendMessage(new TranslationTextComponent("translation.villagersnose.trade_refusal"), Util.NIL_UUID);
-                                event.setCanceled(true);
-                            }
-                        }
                     }
                 }
             }

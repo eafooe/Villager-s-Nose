@@ -1,32 +1,32 @@
 package com.emilyfooe.villagersnose.item;
 
-import com.emilyfooe.villagersnose.api.VillagersNoseAPI;
-import com.emilyfooe.villagersnose.client.renderer.entity.model.ModelNose;
-import com.emilyfooe.villagersnose.client.renderer.entity.model.ModelWitchNose;
+import com.emilyfooe.villagersnose.client.model.WitchNoseModel;
 import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.inventory.EquipmentSlotType;
+import net.minecraft.item.ArmorMaterial;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-public class ItemWitchNose extends ItemNose {
-    public ItemWitchNose() {
-        super(VillagersNoseAPI.FLESH_ARMOR_MATERIAL);
+public class WitchNoseItem extends BaseNoseItem {
+    public WitchNoseItem() {
+        super(ArmorMaterial.DIAMOND);
     }
 
-    @Override
+    @SuppressWarnings("unchecked")
     @OnlyIn(Dist.CLIENT)
     public <A extends BipedModel<?>> A getArmorModel(LivingEntity entityLiving, ItemStack itemStack, EquipmentSlotType armorSlot, A defaultModel) {
-        ModelWitchNose.INSTANCE.rotate(entityLiving, itemStack);
-        return (A) ModelWitchNose.INSTANCE;
+        WitchNoseModel.INSTANCE.rotate(entityLiving);
+        return (A) WitchNoseModel.INSTANCE;
     }
 
     @Override
     public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlotType slot, String type) {
         return "villagersnose:textures/models/armor/witch_nose.png";
     }
+
 }
 
 /**

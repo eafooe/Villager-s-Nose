@@ -20,19 +20,6 @@
   },
   "elements": [
     {
-      "_comment": "Nose",
-      "from": [7, 6, 10],
-      "to": [9, 8, 14],
-      "faces": {
-        "south":  {"texture": "#nose_front"},
-        "north":  {"texture": "#nose_front"},
-        "up":     {"texture": "#nose_top"},
-        "down":   {"texture": "#nose_bottom"},
-        "west":   {"texture": "#nose_side"},
-        "east":   {"texture": "#nose_side"}
-      }
-    },
-    {
       "_comment": "Head",
       "from": [4, 0, 3],
       "to": [12, 6, 13],

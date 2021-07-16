@@ -1,44 +1,34 @@
 {
   "parent": "block/block",
+  "credit": "Made with Blockbench",
   "textures": {
-    "particle": "villagersnose:block/villager_crop/nose/nose_front_or_top",
-    "nose_front": "villagersnose:block/villager_crop/nose/nose_front_or_top",
-    "nose_side": "villagersnose:block/villager_crop/nose/nose_side_or_bottom",
-    "nose_top": "villagersnose:block/villager_crop/nose/nose_front_or_top",
-    "nose_bottom": "villagersnose:block/villager_crop/nose/nose_side_or_bottom"
+    "0": "villagersnose:models/armor/witch_nose",
+    "particle": "villagersnose:models/armor/witch_nose"
   },
   "elements": [
     {
-      "from": [
-        4,
-        0,
-        4
-      ],
-      "to": [
-        12,
-        16,
-        12
-      ],
+      "from": [4, 0, 4],
+      "to": [12, 16, 12],
       "faces": {
-        "south": {
-          "texture": "#nose_front"
-        },
-        "north": {
-          "texture": "#nose_front"
-        },
-        "up": {
-          "texture": "#nose_top"
-        },
-        "down": {
-          "texture": "#nose_bottom",
-          "cullface": "down"
-        },
-        "west": {
-          "texture": "#nose_side"
-        },
-        "east": {
-          "texture": "#nose_side"
-        }
+        "north": {"uv": [2, 2, 4, 6], "texture": "#0"},
+        "east": {"uv": [0, 2, 2, 6], "texture": "#0"},
+        "south": {"uv": [6, 2, 8, 6], "texture": "#0"},
+        "west": {"uv": [4, 2, 6, 6], "texture": "#0"},
+        "up": {"uv": [2, 0, 4, 2], "texture": "#0"},
+        "down": {"uv": [4, 0, 6, 2], "texture": "#0"}
+      }
+    },
+    {
+      "name": "mole",
+      "from": [6, 4, 2],
+      "to": [8, 6, 4],
+      "faces": {
+        "north": {"uv": [9, 1, 10, 2], "texture": "#0"},
+        "east": {"uv": [10, 1, 11, 2], "texture": "#0"},
+        "south": {"uv": [11, 1, 12, 2], "texture": "#0"},
+        "west": {"uv": [8, 1, 9, 2], "texture": "#0"},
+        "up": {"uv": [9, 0, 10, 1], "texture": "#0"},
+        "down": {"uv": [10, 0, 11, 1], "texture": "#0"}
       }
     }
   ]

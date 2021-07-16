@@ -8,8 +8,6 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
 
 public class VillagersNoseAPI {
-
-
     public static IArmorMaterial FLESH_ARMOR_MATERIAL = new IArmorMaterial() {
         @Override
         public int getDurabilityForSlot(EquipmentSlotType p_200896_1_) {

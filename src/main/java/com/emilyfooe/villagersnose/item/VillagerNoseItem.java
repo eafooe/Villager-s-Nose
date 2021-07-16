@@ -1,7 +1,7 @@
 package com.emilyfooe.villagersnose.item;
 
 import com.emilyfooe.villagersnose.Configuration;
-import com.emilyfooe.villagersnose.client.renderer.entity.model.ModelNose;
+import com.emilyfooe.villagersnose.client.model.NoseModel;
 import com.emilyfooe.villagersnose.init.ModBlocks;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -30,17 +30,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
-public class ItemNose extends ArmorItem implements IForgeItem, IPlantable {
-
+public class VillagerNoseItem extends BaseNoseItem implements IForgeItem, IPlantable {
     private static final List<SoundEvent> villagerSounds = createVillagerSoundsList();
 
-    public ItemNose() {
-        super(ArmorMaterial.LEATHER, EquipmentSlotType.HEAD, new Item.Properties().stacksTo(64).rarity(Rarity.COMMON).tab(ItemGroup.TAB_MISC));
-    }
-
-
-    public ItemNose(IArmorMaterial armorMaterial){
-        super(armorMaterial, EquipmentSlotType.HEAD, new Item.Properties().stacksTo(64).rarity(Rarity.COMMON).tab(ItemGroup.TAB_MISC));
+    public VillagerNoseItem() {
+        super(ArmorMaterial.LEATHER);
     }
 
     public static boolean emeraldsAreNearby(World world, double posX, double posY, double posZ) {
@@ -80,7 +74,6 @@ public class ItemNose extends ArmorItem implements IForgeItem, IPlantable {
             if (emeraldsAreNearby(world, posX, posY, posZ)) {
                 Random rand = new Random();
                 playerEntity.playSound(getRandomVillagerSound(), 1.0F, (rand.nextFloat() - rand.nextFloat()) * 0.2F + 1.0F);
-
             }
         }
     }
@@ -88,8 +81,8 @@ public class ItemNose extends ArmorItem implements IForgeItem, IPlantable {
     @SuppressWarnings("unchecked")
     @OnlyIn(Dist.CLIENT)
     public <A extends BipedModel<?>> A getArmorModel(LivingEntity entityLiving, ItemStack itemStack, EquipmentSlotType armorSlot, A defaultModel) {
-        ModelNose.INSTANCE.rotate(entityLiving, itemStack);
-        return (A) ModelNose.INSTANCE;
+        NoseModel.INSTANCE.rotate(entityLiving, itemStack);
+        return (A) NoseModel.INSTANCE;
     }
 
     @Override
@@ -129,7 +122,7 @@ public class ItemNose extends ArmorItem implements IForgeItem, IPlantable {
         Direction direction = context.getClickedFace();
         FaceDirection faceDirection = FaceDirection.fromFacing(direction);
         if (context.getPlayer() == null){
-            return  ActionResultType.FAIL;
+            return ActionResultType.FAIL;
         }
         boolean playerCanInteractWithBlock = context.getPlayer().mayUseItemAt(context.getClickedPos(), direction, stack);
 
@@ -142,9 +135,10 @@ public class ItemNose extends ArmorItem implements IForgeItem, IPlantable {
             }
             return ActionResultType.SUCCESS;
         } else {
-            return ActionResultType.FAIL;
+            return ActionResultType.PASS;
         }
     }
+
 
 
 }
